@@ -21,9 +21,8 @@ from api_authorization import views
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
-    path('api/integration/', include('api_integration.urls')),
     path('api/authorization/', include('api_authorization.urls')),
-    path('api/projects/', include('api_projects.urls')),
+    path('api/main/', include('api_project_hci.urls')),
     path('api/users/', include('api_users.urls')),
     path('api/health-check/', views.health_check, name='health_check'),
 ]

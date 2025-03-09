@@ -4,9 +4,9 @@ from celery import Celery
 # from django.conf import settings
 # from .mongo_setup import connect_mongo
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'system_installation_project.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'system_project_hci.settings')
 
-app = Celery('system_installation_project')
+app = Celery('system_project_hci')
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
