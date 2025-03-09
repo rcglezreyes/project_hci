@@ -28,33 +28,5 @@ def create_superuser():
         superuser.save()
         print("Superuser created!")
 
-def create_project_permissions():
-    
-    if not ProjectPermissions.objects(name='full access').first():
-        permission = ProjectPermissions(
-            name='full access',
-            description='full access to project',
-        )
-        permission.save()
-    if not ProjectPermissions.objects(name='read').first():
-        permission = ProjectPermissions(
-            name='read',
-            description='read access to project',
-        )
-        permission.save()
-    if not ProjectPermissions.objects(name='write').first():
-        permission = ProjectPermissions(
-            name='write',
-            description='write access to project',
-        )
-        permission.save()
-    if not ProjectPermissions.objects(name='delete').first():
-        permission = ProjectPermissions(
-            name='delete',
-            description='delete access to project',
-        )
-        permission.save()
-
 if __name__ == "__main__":
     create_superuser()
-    create_project_permissions()
