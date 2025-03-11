@@ -26,6 +26,7 @@ class LoginUser(Document):
     token = StringField(max_length=255, required=False)
     user_role = DynamicField(required=False)
     avatar_url = StringField(max_length=255, required=False)
+    address = StringField(required=False)
 
     meta = {
         'collection': 'login_users',

@@ -8,7 +8,7 @@ from .models import (
     UserRole,
 )
 from api_authorization.models import LoginUser
-from api_projects.data_util import serialize_datetime, dynamic_field_to_json
+from api_project_hci.data_util import serialize_datetime, dynamic_field_to_json
 from bson import ObjectId
 
 @convert_mongoengine_field.register(DynamicField)

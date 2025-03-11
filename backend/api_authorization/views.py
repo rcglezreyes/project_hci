@@ -7,7 +7,7 @@ from bson.objectid import ObjectId
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from .models import LoginUser
-from api_projects.models import ProjectTracking
+from api_project_hci.models import Tracking
 import json
 import logging
 
@@ -42,7 +42,7 @@ def login(request):
                 request.session.set_expiry(0)
                 request.session.modified = True
                 logger.info(f'User {username} logged in')
-                tracking = ProjectTracking(
+                tracking = Tracking(
                     user_reporter=user,
                     action='login',
                     created_time=timezone.now(),
@@ -75,7 +75,7 @@ def logout(request):
     if user_reporter:
         request.session.flush()
         logger.info(f'User {user_reporter["username"]} logged out')
-        tracking = ProjectTracking(
+        tracking = Tracking(
             user_reporter=user_reporter,
             action='logout',
             created_time=timezone.now(),
