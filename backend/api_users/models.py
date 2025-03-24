@@ -2,7 +2,8 @@ import mongoengine
 from mongoengine import (
     Document, 
     StringField, 
-    DateTimeField, 
+    DateTimeField,
+    BooleanField,
 )
     
 class UserRole(Document):
@@ -10,6 +11,7 @@ class UserRole(Document):
     created_time = DateTimeField(default=mongoengine.fields.DateTimeField().default)
     last_modified_time = DateTimeField(default=mongoengine.fields.DateTimeField().default)
     description = StringField(required=False)
+    is_active = BooleanField(default=True)
 
     meta = {
         'collection': 'user_role',

@@ -103,6 +103,31 @@ class DisabilityConsumer(AsyncWebsocketConsumer):
 
     async def disability_update(self, event):
         await self.send(text_data=json.dumps(event["message"]))
+
+
+######################################################
+# DIAGNOSIS
+######################################################
+
+class DiagnosisConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.channel_layer.group_add(
+            "diagnosis",
+            self.channel_name
+        )
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            "diagnosis",
+            self.channel_name
+        )
+
+    async def receive(self, text_data):
+        pass
+
+    async def diagnosis_update(self, event):
+        await self.send(text_data=json.dumps(event["message"]))
         
         
 ######################################################
@@ -180,4 +205,56 @@ class AdmissionConsumer(AsyncWebsocketConsumer):
         pass
 
     async def admission_update(self, event):
+        await self.send(text_data=json.dumps(event["message"]))
+
+
+######################################################
+# NOTIFICATIONS
+######################################################
+
+
+class NotificationUserConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.channel_layer.group_add(
+            "notification_user",
+            self.channel_name
+        )
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            "notification_user",
+            self.channel_name
+        )
+
+    async def receive(self, text_data):
+        pass
+
+    async def notification_user_update(self, event):
+        await self.send(text_data=json.dumps(event["message"]))
+
+
+######################################################
+# TRACKINGS
+######################################################
+
+
+class TrackingConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.channel_layer.group_add(
+            "tracking",
+            self.channel_name
+        )
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            "tracking",
+            self.channel_name
+        )
+
+    async def receive(self, text_data):
+        pass
+
+    async def tracking_update(self, event):
         await self.send(text_data=json.dumps(event["message"]))

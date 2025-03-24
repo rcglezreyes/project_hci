@@ -25,6 +25,7 @@ def user_role_saved(sender, document, **kwargs):
                 "description": document.description,
                 "createdTime": document.created_time,
                 "lastModifiedTime": document.last_modified_time,
+                "isActive": document.is_active,
             }
 
         }
@@ -44,6 +45,7 @@ def user_role_deleted(sender, document, **kwargs):
                 "description": document.description,
                 "createdTime": document.created_time,
                 "lastModifiedTime": document.last_modified_time,
+                "isActive": document.is_active,
             }
         }
     }
@@ -74,6 +76,7 @@ def user_saved(sender, document, **kwargs):
                 "phoneNumber": document.phone_number,
                 "userRole": document.user_role,
                 "username": document.username,
+                "isActive": document.is_active,
             }
         }
     }
@@ -99,6 +102,7 @@ def user_deleted(sender, document, **kwargs):
                 "phoneNumber": document.phone_number,
                 "userRole": document.user_role,
                 "username": document.username,
+                "isActive": document.is_active,
             }
         }
     }

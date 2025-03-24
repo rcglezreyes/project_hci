@@ -17,7 +17,8 @@ from .mongo_setup import (
 )
 import os
 import environ
-import warnings 
+import warnings
+import urllib.parse
 
 
 env = environ.Env(
@@ -103,6 +104,7 @@ INSTALLED_APPS = [
     'api_authorization',
     'api_project_hci.apps.ApiProjectHciConfig',
     'api_users.apps.ApiUsersConfig',
+    'api_async_task_sequence',
 ]
 
 MIDDLEWARE = [
@@ -237,6 +239,12 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'America/New_York'
 CELERY_ENABLE_UTC = False
+CELERY_BEAT_SCHEDULE = {
+    'run-task-sequence-daily': {
+        'task': 'api_async_task_sequence.tasks.task_sequence_daily',
+        'schedule': crontab(minute=0, hour=8, day_of_week='*'),
+    },
+}
 
 
 # MONGOENGINE
@@ -248,6 +256,7 @@ MONGO_PORT = int(env('MONGO_PORT', default=27017))
 MONGO_USER = env('MONGO_USER', default='root')
 MONGO_PASSWORD = env('MONGO_PASSWORD', default='')
 MONGO_DB = env('MONGO_DB', default='')
+MONGO_URI = f"mongodb://{MONGO_USER}:{urllib.parse.quote_plus(MONGO_PASSWORD)}@{MONGO_HOST}:{MONGO_PORT}/{MONGO_DB}?authSource=admin&authMechanism=SCRAM-SHA-1"
 connect_mongo()
 
 

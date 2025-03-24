@@ -26,6 +26,7 @@ class MedicalStaff(Document):
     graduated_date = DateTimeField(default=timezone.now, null=True)
     created_time = DateTimeField(default=timezone.now, null=True)
     last_modified_time = DateTimeField(default=timezone.now, null=True)
+    is_active = BooleanField(default=True)
     
     meta = {
         'collection': 'medical_staff',
@@ -43,15 +44,17 @@ class MedicalStaff(Document):
 
 class Patient(Document):
     user = DynamicField(required=False)
-    disability = DynamicField(required=False)
+    disabilities = DynamicField(required=False)
     created_time = DateTimeField(default=timezone.now, null=True)
     last_modified_time = DateTimeField(default=timezone.now, null=True)
+    birth_date = DateTimeField(null=True)
+    is_active = BooleanField(default=True)
     
     meta = {
         'collection': 'patient',
         'ordering': ['order'],
         'indexes': [
-            'user', 'disability'
+            'user', 'disabilities', 'birth_date'
         ],
         'verbose_name': 'Patient',
         'verbose_name_plural': 'Patients'
@@ -66,8 +69,8 @@ class Admission(Document):
     patient = DynamicField(required=False)
     medical_staff = DynamicField(required=False)
     date = DateTimeField(default=timezone.now, null=True)
-    diagnosis = DynamicField(required=False)
-    diagnosis_notes = StringField(required=False)
+    diagnoses = ListField(DynamicField(required=False))
+    diagnoses_notes = StringField(required=False)
     room = DynamicField(required=False)
     bed = IntField(required=False)
     is_surgical = BooleanField(default=False)
@@ -75,12 +78,13 @@ class Admission(Document):
     days_in_admission = IntField(required=False)
     created_time = DateTimeField(default=timezone.now, null=True)
     last_modified_time = DateTimeField(default=timezone.now, null=True)
+    is_active = BooleanField(default=True)
     
     meta = {
         'collection': 'admission',
         'ordering': ['order'],
         'indexes': [
-            'patient', 'medical_staff', 'date', 'diagnosis', 'diagnosis_notes', 'room', 'bed', 'is_surgical', 'is_urgent', 'days_in_admission'
+            'patient', 'medical_staff', 'date', 'diagnoses', 'diagnoses_notes', 'room', 'bed', 'is_surgical', 'is_urgent', 'days_in_admission'
         ],
         'verbose_name': 'Admission',
         'verbose_name_plural': 'Admissions'
@@ -95,6 +99,7 @@ class Specialty(Document):
     description = StringField(required=False)
     created_time = DateTimeField(default=timezone.now, null=True)
     last_modified_time = DateTimeField(default=timezone.now, null=True)
+    is_active = BooleanField(default=True)
     
     meta = {
         'collection': 'specialty',
@@ -115,6 +120,7 @@ class Department(Document):
     description = StringField(required=False)
     created_time = DateTimeField(default=timezone.now, null=True)
     last_modified_time = DateTimeField(default=timezone.now, null=True)
+    is_active = BooleanField(default=True)
     
     meta = {
         'collection': 'department',
@@ -135,6 +141,7 @@ class Room(Document):
     description = StringField(required=False)
     created_time = DateTimeField(default=timezone.now, null=True)
     last_modified_time = DateTimeField(default=timezone.now, null=True)
+    is_active = BooleanField(default=True)
     
     meta = {
         'collection': 'room',
@@ -155,6 +162,7 @@ class Disability(Document):
     description = StringField(required=False)
     created_time = DateTimeField(default=timezone.now, null=True)
     last_modified_time = DateTimeField(default=timezone.now, null=True)
+    is_active = BooleanField(default=True)
     
     meta = {
         'collection': 'disability',
@@ -223,3 +231,21 @@ class NotificationUser(Document):
     }
     def __str__(self):
         return f'{self.username} - {self.notification.info}'
+
+
+class Diagnosis(Document):
+    name = StringField(max_length=255, required=True)
+    description = StringField(required=False)
+    created_time = DateTimeField(default=timezone.now, null=True)
+    last_modified_time = DateTimeField(default=timezone.now, null=True)
+    is_active = BooleanField(default=True)
+
+    meta = {
+        'collection': 'diagnosis',
+        'ordering': ['order'],
+        'indexes': [
+            'name', 'description', 'created_time', 'last_modified_time'
+        ],
+        'verbose_name': 'Diagnosis',
+        'verbose_name_plural': 'Diagnoses'
+    }

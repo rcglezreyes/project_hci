@@ -12,6 +12,10 @@ from .models import (
     Department,
     Room,
     Disability,
+    Diagnosis,
+    Notification,
+    NotificationUser,
+    Tracking,
 )
 from api_authorization.models import LoginUser
 from .data_util import serialize_datetime, dynamic_field_to_json
@@ -39,6 +43,11 @@ class RoomType(MongoengineObjectType):
 class DisabilityType(MongoengineObjectType):
     class Meta:
         model = Disability
+
+
+class DiagnosisType(MongoengineObjectType):
+    class Meta:
+        model = Diagnosis
         
 
 class PatientType(MongoengineObjectType):
@@ -46,17 +55,17 @@ class PatientType(MongoengineObjectType):
         model = Patient
         
     user = GenericScalar()
-    disability = GenericScalar()
+    disabilities = GenericScalar()
     
     def resolve_user(self, info):
         user = self.user or {}
         user = serialize_datetime(user)
         return dynamic_field_to_json(user)
     
-    def resolve_disability(self, info):
-        disability = self.disability or []
-        disability = serialize_datetime(disability)
-        return dynamic_field_to_json(disability)
+    def resolve_disabilities(self, info):
+        disabilities = self.disabilities or []
+        disabilities = serialize_datetime(disabilities)
+        return dynamic_field_to_json(disabilities)
     
 class MedicalStaffType(MongoengineObjectType):
     class Meta:
@@ -111,6 +120,55 @@ class AdmissionType(MongoengineObjectType):
         room = serialize_datetime(room)
         return dynamic_field_to_json(room)
 
+
+class NotificationType(MongoengineObjectType):
+    class Meta:
+        model = Notification
+
+class NotificationUserType(MongoengineObjectType):
+    class Meta:
+        model = NotificationUser
+
+    notification = GenericScalar()
+    user = GenericScalar()
+
+    def resolve_notification(self, info):
+        notification = self.notification or {}
+        notification = serialize_datetime(notification)
+        return dynamic_field_to_json(notification)
+
+    def resolve_user(self, info):
+        user = self.user or {}
+        user = serialize_datetime(user)
+        return dynamic_field_to_json(user)
+
+
+class NotificationUsersPaginated(graphene.ObjectType):
+    count = graphene.Int()
+    page = graphene.Int()
+    page_size = graphene.Int()
+    results = graphene.List(NotificationUserType)
+
+class TrackingType(MongoengineObjectType):
+    class Meta:
+        model = Tracking
+    created_time = graphene.String()
+    managed_data = GenericScalar()
+    user_reporter = GenericScalar()
+
+    def resolve_created_time(self, info):
+        return self.created_time.strftime('%Y-%m-%d %H:%M:%S')
+
+    def resolve_managed_data(self, info):
+        managed_data = self.managed_data or {}
+        managed_data = serialize_datetime(managed_data)
+        return dynamic_field_to_json(managed_data)
+
+    def resolve_user_reporter(self, info):
+        user_reporter = self.user_reporter or {}
+        user_reporter = serialize_datetime(user_reporter)
+        return dynamic_field_to_json(user_reporter)
+
     
 
 class Query(graphene.ObjectType):
@@ -121,6 +179,15 @@ class Query(graphene.ObjectType):
     departments = graphene.List(DepartmentType)
     rooms = graphene.List(RoomType)
     disabilities = graphene.List(DisabilityType)
+    diagnoses = graphene.List(DiagnosisType)
+    trackings = graphene.List(TrackingType)
+    notification_users = graphene.Field(
+        NotificationUsersPaginated,
+        username=graphene.String(required=False),
+        user=graphene.String(required=False),
+        page=graphene.Int(required=False, default_value=1),
+        pageSize=graphene.Int(required=False, default_value=100)
+    )
 
     def resolve_patients(self, info):
         return Patient.objects.all()
@@ -142,6 +209,29 @@ class Query(graphene.ObjectType):
     
     def resolve_disabilities(self, info):
         return Disability.objects.all()
+
+    def resolve_diagnoses(self, info):
+        return Diagnosis.objects.all()
+
+    def resolve_trackings(self, info):
+        return Tracking.objects.all()
+
+    def resolve_notification_users(self, info, username=None, user=None, page=1, pageSize=100):
+        qs = NotificationUser.objects.all()
+        if username:
+            qs = qs(username=username)
+        if user:
+            qs = qs(user__username=user)
+        qs = qs.order_by('-created_time')
+        total = qs.count()
+        skip = (page - 1) * pageSize
+        paginated_qs = qs.skip(skip).limit(pageSize)
+        return NotificationUsersPaginated(
+            count=total,
+            page=page,
+            page_size=pageSize,
+            results=list(paginated_qs)
+        )
     
 
 schema = graphene.Schema(query=Query)

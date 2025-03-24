@@ -32,7 +32,7 @@ def create_user_role(request):
     data = request.data
     name = data.get('name')
     description = data.get('description')
-    user_reporter = data.get('userReporter')
+    user_reporter = json.loads(data.get('userReporter'))
     
     if not name:
         return Response({'error': 'Name is required'}, status=400)
@@ -86,7 +86,7 @@ def create_user_role(request):
 # EDIT USER ROLE
 #############################################
 
-@api_view(['POST'])
+@api_view(['PUT'])
 @permission_classes([AllowAny])
 def edit_user_role(request, id): 
     try:
@@ -97,7 +97,7 @@ def edit_user_role(request, id):
         data = request.data
         name = data.get('name')
         description = data.get('description')
-        user_reporter = data.get('userReporter')
+        user_reporter = json.loads(data.get('userReporter'))
         
         if not name:
             return Response({'error': 'Name is required'}, status=400)
@@ -116,7 +116,7 @@ def edit_user_role(request, id):
         tracking_info = transform_data_to_mongo(user_role)
         
         users = LoginUser.objects.all()
-        users = [user for user in users if str(user.user_role['id']) == id]
+        users = [user for user in users if str(user.user_role.get('id', None)) == id]
         for user in users:
             user.user_role = tracking_info
             user.save()
@@ -161,16 +161,12 @@ def delete_user_role(request, id):
             return Response({'error': 'User role does not exist'}, status=400)
         
         data = request.data
-        user_reporter = data.get('userReporter')
+        user_reporter = json.loads(data.get('userReporter'))
         
         users = LoginUser.objects.all()
-        users = [user for user in users if str(user.user_role['id']) == id]
+        users = [user for user in users if str(user.user_role.get('id', None)) == id]
         if users:
             return Response({'error': 'User role is in use'}, status=400)
-        
-        user_role.delete()
-        
-        logger.info(f'Deleted user role with id {user_role.id} and name {user_role.name}')
         
         tracking_info = transform_data_to_mongo(user_role)
         
@@ -186,13 +182,17 @@ def delete_user_role(request, id):
         tracking.save()
         
         logger.info(f'Created tracking with id {tracking.id} and action {tracking.action}')
+
+        user_role.delete()
+
+        logger.info(f'Deleted user role with id {user_role.id} and name {user_role.name}')
         
         if user_reporter:
             module='user_roles'
             info=f'has deleted a user role ({user_role.name})'
             info_id=user_role.id
             type='delete_user_role'
-            create_notification(module, info_id, info, type, user_reporter['username'])
+            create_notification(module, info_id, info, type, user_reporter.get('username', None))
         
         return Response({'success': 'User role deleted successfully'}, status=200)
     
@@ -209,7 +209,7 @@ def delete_user_role(request, id):
 def delete_user_roles(request): 
     try:
         data = request.data
-        user_reporter = data.get('userReporter')
+        user_reporter = json.loads(data.get('userReporter'))
         ids = data.get('userRoleIds')
         
         user_roles = UserRole.objects(id__in=ids)
@@ -219,7 +219,7 @@ def delete_user_roles(request):
         users = LoginUser.objects.all()
         
         for user_role in user_roles:
-            users = [user for user in users if str(user.user_role['id']) == str(user_role.id)]
+            users = [user for user in users if str(user.user_role.get('id', None)) == str(user_role.id)]
             if users:
                 return Response({'error': 'User role(s) in use'}, status=400)
         
@@ -270,9 +270,8 @@ def create_user(request):
     phone_number = data.get('phoneNumber')
     role = data.get('role')
     password = data.get('password')
-    user_reporter = data.get('userReporter')
+    user_reporter = json.loads(data.get('userReporter'))
     avatar_url = data.get('avatarUrl')
-    birth_date = data.get('birthDate')
     address = data.get('address')
     gender = data.get('gender')
     
@@ -284,8 +283,10 @@ def create_user(request):
         role = UserRole.objects.filter(id=role).first()
         if not role:
             return Response({'error': 'Role does not exist'}, status=400)
-        
         role = transform_data_to_mongo(role)
+
+        if not password:
+            return Response({'error': 'Password is required'}, status=400)
         
         user = LoginUser(
             username=username,
@@ -296,14 +297,14 @@ def create_user(request):
             user_role=role,
             is_active=True,
             avatar_url=avatar_url,
-            birth_date=birth_date,
             address=address,
             gender=gender,
             created_time=timezone.now(),
             last_modified_time=timezone.now(),
         )
-        
+
         user.set_password(password)
+
         user.save()
         
         logger.info(f'Created user with id {user.id} and username {user.username}')
@@ -341,7 +342,7 @@ def create_user(request):
 # EDIT USER
 #############################################
 
-@api_view(['POST'])
+@api_view(['PUT'])
 @permission_classes([AllowAny])
 def edit_user(request, id): 
     try:
@@ -357,8 +358,7 @@ def edit_user(request, id):
         phone_number = data.get('phoneNumber')
         role = data.get('role')
         password = data.get('password')
-        user_reporter = data.get('userReporter')
-        birth_date = data.get('birthDate')
+        user_reporter = json.loads(data.get('userReporter'))
         address = data.get('address')
         gender = data.get('gender')
     
@@ -379,7 +379,6 @@ def edit_user(request, id):
         user.last_name = last_name if last_name else user.last_name
         user.phone_number = phone_number if phone_number else user.phone_number
         user.user_role = role if role else user.user_role
-        user.birth_date = birth_date if birth_date else user.birth_date
         user.address = address if address else user.address
         user.gender = gender if gender else user.gender
         user.last_modified_time = timezone.now()
@@ -392,27 +391,27 @@ def edit_user(request, id):
         tracking_info = transform_data_to_mongo(user, exclude_fields=['password'])
         
         patients = Patient.objects.all()
-        patients = [patient for patient in patients if str(patient.user['id']) == id]
+        patients = [patient for patient in patients if str(patient.user.get('id', None)) == id]
         if patients:
             for patient in patients:
                 patient.user = tracking_info
                 patient.save()
                 
                 admissions = Admission.objects.all()
-                admissions = [admission for admission in admissions if str(admission.patient['id']) == id]
+                admissions = [admission for admission in admissions if str(admission.patient.get('id', None)) == id]
                 for admission in admissions:
                     admission.patient = tracking_info
                     admission.save()
         
         medical_staffs = MedicalStaff.objects.all()
-        medical_staffs = [medical_staff for medical_staff in medical_staffs if str(medical_staff.user['id']) == id]
+        medical_staffs = [medical_staff for medical_staff in medical_staffs if str(medical_staff.user.get('id', None)) == id]
         if medical_staffs:
             for medical_staff in medical_staffs:
                 medical_staff.user = tracking_info
                 medical_staff.save()
 
                 admissions = Admission.objects.all()
-                admissions = [admission for admission in admissions if str(admission.medical_staff['id']) == id]
+                admissions = [admission for admission in admissions if str(admission.medical_staff.get('id', None)) == id]
                 for admission in admissions:
                     admission.medical_staff = tracking_info
                     admission.save()
@@ -498,7 +497,7 @@ def change_password(request, id):
 @permission_classes([AllowAny])
 def delete_user(request, id):
     data = request.data
-    user_reporter = data.get('userReporter')
+    user_reporter = json.loads(data.get('userReporter'))
     try:
         user = LoginUser.objects(id=id).first()
         if not user:
@@ -507,19 +506,15 @@ def delete_user(request, id):
         if user.username == user_reporter['username']:
             return Response({'error': 'You cannot delete your own account'}, status=400)
         
-        user.delete()
-        
-        logger.info(f'Deleted user with id {user.id} and username {user.username}')
-        
         tracking_info = transform_data_to_mongo(user, exclude_fields=['password'])
         
         patients = Patient.objects.all()
-        patients = [patient for patient in patients if str(patient.user['id']) == id]
+        patients = [patient for patient in patients if str(patient.user.get('id', None)) == id]
         if patients:
             patients.delete()
         
         medical_staffs = MedicalStaff.objects.all()
-        medical_staffs = [medical_staff for medical_staff in medical_staffs if str(medical_staff.user['id']) == id]
+        medical_staffs = [medical_staff for medical_staff in medical_staffs if str(medical_staff.user('id', None)) == id]
         if medical_staffs:
             medical_staffs.delete()
 
@@ -532,6 +527,7 @@ def delete_user(request, id):
                 'data': tracking_info
             },
         )
+
         tracking.save()
         
         logger.info(f'Created tracking with id {tracking.id} and action {tracking.action}')
@@ -542,6 +538,10 @@ def delete_user(request, id):
             info_id=user.id
             type='delete_user'
             create_notification(module, info_id, info, type, user_reporter['username'])
+
+        user.delete()
+
+        logger.info(f'Deleted user with id {user.id} and username {user.username}')
         
         return Response({'message': 'User deleted successfully'}, status=200)
     except LoginUser.DoesNotExist:
@@ -556,7 +556,7 @@ def delete_user(request, id):
 @permission_classes([AllowAny])
 def delete_users(request):
     data = request.data
-    user_reporter = data.get('userReporter')
+    user_reporter = json.loads(data.get('userReporter'))
     ids = data.get('userIds')
     try:
         users = LoginUser.objects(id__in=ids)
@@ -567,20 +567,15 @@ def delete_users(request):
         if not users:
             return Response({'error': 'You cannot delete your own account'}, status=400)
         
-        for user in users:
-            user.delete()
-            
-        logger.info(f'Deleted users with ids {", ".join([str(user.username) for user in users])}')
-        
         tracking_info = [transform_data_to_mongo(user, exclude_fields=['password']) for user in users]
         
         patients = Patient.objects.all()
-        patients = [patient for patient in patients if str(patient.user['id']) in ids]
+        patients = [patient for patient in patients if str(patient.user.get('id', None)) in ids]
         if patients:
             patients.delete()
         
         medical_staffs = MedicalStaff.objects.all()
-        medical_staffs = [medical_staff for medical_staff in medical_staffs if str(medical_staff.user['id']) in ids]
+        medical_staffs = [medical_staff for medical_staff in medical_staffs if str(medical_staff.user('id', None)) in ids]
         if medical_staffs:
             medical_staffs.delete()
         
@@ -600,6 +595,10 @@ def delete_users(request):
             info_id='list'
             type='delete_users'
             create_notification(module, info_id, info, type, user_reporter['username'])
+
+        users.delete()
+
+        logger.info(f'Deleted users with ids {", ".join([str(user.username) for user in users])}')
         
         return Response({'message': 'Users deleted successfully'}, status=200)
     except LoginUser.DoesNotExist:

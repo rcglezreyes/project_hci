@@ -8,14 +8,20 @@ from .consumers import (
     PatientConsumer,
     MedicalStaffConsumer,
     AdmissionConsumer,
+    DiagnosisConsumer,
+    NotificationUserConsumer,
+    TrackingConsumer,
 )
 
 websocket_urlpatterns = [
-    path('api/project/ws/specialties/', SpecialtyConsumer.as_asgi(), name='ws_specialties'),
-    path('api/project/ws/departments/', DepartmentConsumer.as_asgi(), name='ws_departments'),
-    path('api/project/ws/rooms/', RoomConsumer.as_asgi(), name='ws_rooms'),
-    path('api/project/ws/disabilities/', DisabilityConsumer.as_asgi(), name='ws_disabilities'),
-    path('api/project/ws/patients/', PatientConsumer.as_asgi(), name='ws_patients'),
-    path('api/project/ws/medical-staffs/', MedicalStaffConsumer.as_asgi(), name='ws_medical_staffs'),
-    path('api/project/ws/admissions/', AdmissionConsumer.as_asgi(), name='ws_admissions'),
+    path('api/main/ws/specialties/', SpecialtyConsumer.as_asgi(), name='ws_specialties'),
+    path('api/main/ws/departments/', DepartmentConsumer.as_asgi(), name='ws_departments'),
+    path('api/main/ws/rooms/', RoomConsumer.as_asgi(), name='ws_rooms'),
+    path('api/main/ws/disabilities/', DisabilityConsumer.as_asgi(), name='ws_disabilities'),
+    path('api/main/ws/patients/', PatientConsumer.as_asgi(), name='ws_patients'),
+    path('api/main/ws/medical-staffs/', MedicalStaffConsumer.as_asgi(), name='ws_medical_staffs'),
+    path('api/main/ws/admissions/', AdmissionConsumer.as_asgi(), name='ws_admissions'),
+    path('api/main/ws/diagnoses/', DiagnosisConsumer.as_asgi(), name='ws_diagnoses'),
+    path('api/main/ws/notifications/', NotificationUserConsumer.as_asgi(), name='ws_notifications'),
+    path('api/main/ws/tracks/', TrackingConsumer.as_asgi(), name='ws_tracks'),
 ]
