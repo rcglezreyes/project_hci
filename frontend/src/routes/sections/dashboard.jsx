@@ -39,6 +39,9 @@ const RoomDefaultCreatePage = lazy(() => import('src/pages/dashboard/room/new'))
 // Patient
 const PatientListPage = lazy(() => import('src/pages/dashboard/patient/list'));
 const PatientCreatePage = lazy(() => import('src/pages/dashboard/patient/new'));
+// Admission
+const AdmissionListPage = lazy(() => import('src/pages/dashboard/admission/list'));
+const AdmissionCreatePage = lazy(() => import('src/pages/dashboard/admission/new'));
 // Medical Staff
 const MedicalStaffListPage = lazy(() => import('src/pages/dashboard/medical-staff/list'));
 const MedicalStaffCreatePage = lazy(() => import('src/pages/dashboard/medical-staff/new'));
@@ -72,6 +75,41 @@ export const dashboardRoutes = (listPermissions, user) => [
       {
         path: 'analytics',
         element:  <OverviewAnalyticsPage />,
+      },
+      {
+        path: 'admission',
+        children: [
+          {
+            element: listRolesAndSubroles(user?.user_role?.name).includes(
+                CONFIG.roles.medicalStaff
+            ) ? (
+                <AdmissionListPage />
+            ) : (
+                <Page403 />
+            ),
+            index: true,
+          },
+          {
+            path: 'list',
+            element: listRolesAndSubroles(user?.user_role?.name).includes(
+                CONFIG.roles.medicalStaff
+            ) ? (
+                <AdmissionListPage />
+            ) : (
+                <Page403 />
+            ),
+          },
+          {
+            path: 'new',
+            element: listRolesAndSubroles(user?.user_role?.name).includes(
+                CONFIG.roles.medicalStaff
+            ) ? (
+                <AdmissionCreatePage />
+            ) : (
+                <Page403 />
+            ),
+          },
+        ],
       },
       {
         path: 'medical-staff',

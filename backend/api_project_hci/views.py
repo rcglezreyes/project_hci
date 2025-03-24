@@ -859,7 +859,7 @@ def create_admission(request):
     try:
 
         admission = Admission.objects(
-            patient__id=patient['id'], medical_staff_id=medical_staff['id'], date=date,
+            patient__id=patient.get('id', None), medical_staff__id=medical_staff.get('id', None), date=date,
         ).first()
 
         if admission:

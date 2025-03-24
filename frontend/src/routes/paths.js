@@ -181,10 +181,10 @@ export const paths = {
           deleteAll: `${CONSTANTS.apiUrl}/main/delete-medical-staff/`,
         },
         admission: {
-          create: `${CONSTANTS.apiUrl}/main/create/admission/`,
-          update: (id) => `${CONSTANTS.apiUrl}/main/update/admission/${id}/`,
-          delete: (id) => `${CONSTANTS.apiUrl}/main/delete/admission/${id}/`,
-          deleteAll: `${CONSTANTS.apiUrl}/main/delete/admission/`,
+          create: `${CONSTANTS.apiUrl}/main/create-admission/`,
+          update: (id) => `${CONSTANTS.apiUrl}/main/update-admission/${id}/`,
+          delete: (id) => `${CONSTANTS.apiUrl}/main/delete-admission/${id}/`,
+          deleteAll: `${CONSTANTS.apiUrl}/main/delete-admission/`,
         },
         notification: {
           deleteAll: `${CONSTANTS.apiUrl}/main/delete-notifications/`,

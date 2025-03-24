@@ -180,7 +180,7 @@ class Disability(Document):
     
 class Tracking(Document):
     user_reporter = DynamicField(required=True)
-    action = StringField(max_length=255, required=True)
+    action = StringField(required=True)
     created_time = DateTimeField(default=timezone.now, null=True)
     managed_data = DynamicField(null=True)
     
