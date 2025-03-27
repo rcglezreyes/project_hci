@@ -9,7 +9,6 @@ import { Logo } from 'src/components/logo';
 import { Scrollbar } from 'src/components/scrollbar';
 import { NavSectionVertical } from 'src/components/nav-section';
 
-
 // ----------------------------------------------------------------------
 
 export function NavMobile({ data, open, onClose, slots, sx, ...other }) {
@@ -37,7 +36,7 @@ export function NavMobile({ data, open, onClose, slots, sx, ...other }) {
     >
       {slots?.topArea ?? (
         <Box sx={{ pl: 4.5, pt: 0, pb: 0, mt: -10, ml: 3, mb: -5 }}>
-          <Logo isSingle={false} sx={{ width: '200px', height: 'auto' }}/>
+          <Logo isSingle={false} sx={{ width: '200px', height: 'auto' }} />
         </Box>
       )}
 

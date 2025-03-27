@@ -163,36 +163,60 @@ def update_model(request, model_name, id):
 
         logger.info(f'Updated {model_name} with id {item.id} and name {item.name}')
 
-        if model_name == 'specialty' or model_name == 'department':
-            medical_staffs = MedicalStaff.objects(specialty__id=id).all()
-            for medical_staff in medical_staffs:
-                if model_name == 'specialty':
-                    medical_staff.specialty = transform_data_to_mongo(item)
-                else:
-                    medical_staff.department = transform_data_to_mongo(item)
-                medical_staff.save()
+        if model_name == 'specialty':
+            new_specialty_data = transform_data_to_mongo(item)
+            for ms in MedicalStaff.objects(specialty__id=id):
+                ms.specialty = new_specialty_data
+                ms.save()
+                for admission in Admission.objects(medical_staff__id=str(ms.id)):
+                    admission.medical_staff = transform_data_to_mongo(ms)
+                    admission.save()
 
-                admissions = Admission.objects(medical_staff__id=medical_staff.id).all()
-                for admission in admissions:
-                    admission.medical_staff = transform_data_to_mongo(medical_staff)
+        elif model_name == 'department':
+            new_department_data = transform_data_to_mongo(item)
+            for ms in MedicalStaff.objects(department__id=id):
+                ms.department = new_department_data
+                ms.save()
+                for admission in Admission.objects(medical_staff__id=str(ms.id)):
+                    admission.medical_staff = transform_data_to_mongo(ms)
                     admission.save()
 
         elif model_name == 'room':
+            new_room_data = transform_data_to_mongo(item)
             admissions = Admission.objects(room__id=id).all()
             for admission in admissions:
-                admission.room = transform_data_to_mongo(item)
+                admission.room = new_room_data
                 admission.save()
 
-        else:
-            patients = Patient.objects(disability__id=id).all()
+        elif model_name == 'diagnosis':
+            for admission in Admission.objects(diagnoses__id=id):
+                updated = False
+                for diag in admission.diagnoses:
+                    if diag.get("id") == id:
+                        diag["name"] = item.name
+                        diag["description"] = item.description
+                        updated = True
+                if updated:
+                    admission.save()
+
+        elif model_name == 'disability':
+            patients = Patient.objects(disabilities__id=id)
+            patient_ids = {str(p.id) for p in patients}
             for patient in patients:
-                patient.disability = transform_data_to_mongo(item)
+                disabilities = [d for d in patient.disabilities if d.get("id") != id]
+                disabilities.append(transform_data_to_mongo(item))
+                patient.disabilities = disabilities
                 patient.save()
 
-                admissions = Admission.objects(patient__id=patient.id).all()
-                for admission in admissions:
-                    admission.patient = transform_data_to_mongo(patient)
-                    admission.save()
+            for admission in Admission.objects():
+                patient_data = admission.patient
+                if patient_data and patient_data.get("id") in patient_ids:
+                    if "disabilities" in patient_data:
+                        updated_disabilities = [d for d in patient_data.get("disabilities") if d.get("id") != id]
+                        updated_disabilities.append(transform_data_to_mongo(item))
+                        patient_data["disabilities"] = updated_disabilities
+                        admission.patient = patient_data
+                        admission.save()
 
         tracking = Tracking(
             user_reporter=user_reporter,
@@ -1057,7 +1081,7 @@ def delete_admissions(request):
 
         tracking = Tracking(
             user_reporter=user_reporter,
-            action=f'delete list admissions ({','.join([admission.id for admission in admissions])})',
+            action=f'delete list admissions ({','.join([str(admission.id) for admission in admissions])})',
             created_time=timezone.now(),
             managed_data={
                 'data': tracking_info
@@ -1073,7 +1097,7 @@ def delete_admissions(request):
 
         if user_reporter:
             module='admission'
-            info=f'has deleted list admissions {','.join([ids])}'
+            info=f'has deleted list admissions {','.join(ids)}'
             info_id='list'
             type='delete_list_admission'
             create_notification(module, info_id, info, type, user_reporter['username'])

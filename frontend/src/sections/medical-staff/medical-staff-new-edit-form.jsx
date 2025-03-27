@@ -33,11 +33,11 @@ export function MedicalStaffNewEditForm({ currentMedicalStaff }) {
   const userLogged = useMemo(() => JSON.parse(sessionStorage.getItem('userLogged')), []);
 
   const {
-      loadedMedicalStaffs,
-      refetchMedicalStaffs,
-      loadedUsers,
-      loadedSpecialties,
-      loadedDepartments,
+    loadedMedicalStaffs,
+    refetchMedicalStaffs,
+    loadedUsers,
+    loadedSpecialties,
+    loadedDepartments,
   } = useDataContext();
 
   const filteredUsers = useMemo(() => {
@@ -71,18 +71,20 @@ export function MedicalStaffNewEditForm({ currentMedicalStaff }) {
           .optional(),
       })
       .refine((data) => data.id !== '', { message: 'User is required!' }),
-    specialty: zod.object({
-          id: zod.string(),
-          name: zod.string(),
-          description: zod.string(),
-        })
-        .refine((data) => data.id !== '', { message: 'Specialty is required!' }),
-    department: zod.object({
-          id: zod.string(),
-          name: zod.string(),
-          description: zod.string(),
+    specialty: zod
+      .object({
+        id: zod.string(),
+        name: zod.string(),
+        description: zod.string(),
       })
-          .refine((data) => data.id !== '', { message: 'Department is required!' }),
+      .refine((data) => data.id !== '', { message: 'Specialty is required!' }),
+    department: zod
+      .object({
+        id: zod.string(),
+        name: zod.string(),
+        description: zod.string(),
+      })
+      .refine((data) => data.id !== '', { message: 'Department is required!' }),
     graduatedDate: zod.preprocess(
       (arg) => {
         if (arg === null || arg === undefined) return '';
@@ -103,7 +105,9 @@ export function MedicalStaffNewEditForm({ currentMedicalStaff }) {
       user: currentMedicalStaff?.user || null,
       specialty: currentMedicalStaff?.specialty || null,
       department: currentMedicalStaff?.department || null,
-      graduatedDate: currentMedicalStaff?.graduatedDate ? dayjs(currentMedicalStaff.graduatedDate) : '',
+      graduatedDate: currentMedicalStaff?.graduatedDate
+        ? dayjs(currentMedicalStaff.graduatedDate)
+        : '',
     }),
     [currentMedicalStaff]
   );
@@ -133,7 +137,9 @@ export function MedicalStaffNewEditForm({ currentMedicalStaff }) {
       await refetchMedicalStaffs?.();
       reset();
       toast.success(
-        currentMedicalStaff ? 'Medical Staff Updated successfully!' : 'Medical Staff Created successfully!'
+        currentMedicalStaff
+          ? 'Medical Staff Updated successfully!'
+          : 'Medical Staff Created successfully!'
       );
       router.push(paths.dashboard.medicalStaff.list);
     } catch (err) {
@@ -210,56 +216,56 @@ export function MedicalStaffNewEditForm({ currentMedicalStaff }) {
                   />
                 )}
               />
-                <Field.Autocomplete
-                    name="specialty"
-                    placeholder="Specialty"
-                    value={watch('specialty') || null}
-                    control={control}
-                    options={loadedSpecialties || []}
-                    getOptionLabel={(option) => option.name}
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                    renderOption={(props, item) => (
-                        <ListItem {...props} key={item.id}>
-                            {item.name}
-                        </ListItem>
-                    )}
-                    renderTags={(selected, getTagProps) =>
-                        selected.map((item, index) => (
-                            <Chip
-                                {...getTagProps({ index })}
-                                key={item.id}
-                                size="small"
-                                variant="soft"
-                                label={item.name}
-                            />
-                        ))
-                    }
-                />
-                <Field.Autocomplete
-                    name="department"
-                    placeholder="Department"
-                    value={watch('department') || null}
-                    control={control}
-                    options={loadedDepartments || []}
-                    getOptionLabel={(option) => option.name}
-                    isOptionEqualToValue={(option, value) => option.id === value.id}
-                    renderOption={(props, item) => (
-                        <ListItem {...props} key={item.id}>
-                            {item.name}
-                        </ListItem>
-                    )}
-                    renderTags={(selected, getTagProps) =>
-                        selected.map((item, index) => (
-                            <Chip
-                                {...getTagProps({ index })}
-                                key={item.id}
-                                size="small"
-                                variant="soft"
-                                label={item.name}
-                            />
-                        ))
-                    }
-                />
+              <Field.Autocomplete
+                name="specialty"
+                placeholder="Specialty"
+                value={watch('specialty') || null}
+                control={control}
+                options={loadedSpecialties || []}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderOption={(props, item) => (
+                  <ListItem {...props} key={item.id}>
+                    {item.name}
+                  </ListItem>
+                )}
+                renderTags={(selected, getTagProps) =>
+                  selected.map((item, index) => (
+                    <Chip
+                      {...getTagProps({ index })}
+                      key={item.id}
+                      size="small"
+                      variant="soft"
+                      label={item.name}
+                    />
+                  ))
+                }
+              />
+              <Field.Autocomplete
+                name="department"
+                placeholder="Department"
+                value={watch('department') || null}
+                control={control}
+                options={loadedDepartments || []}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderOption={(props, item) => (
+                  <ListItem {...props} key={item.id}>
+                    {item.name}
+                  </ListItem>
+                )}
+                renderTags={(selected, getTagProps) =>
+                  selected.map((item, index) => (
+                    <Chip
+                      {...getTagProps({ index })}
+                      key={item.id}
+                      size="small"
+                      variant="soft"
+                      label={item.name}
+                    />
+                  ))
+                }
+              />
             </Box>
 
             <Stack

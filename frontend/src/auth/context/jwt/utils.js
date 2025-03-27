@@ -6,7 +6,6 @@ import { CONFIG } from 'src/config-global';
 
 import { STORAGE_KEY, STORAGE_KEY_REFRESH } from './constant';
 
-
 // ----------------------------------------------------------------------
 
 export function jwtDecode(token) {
@@ -111,8 +110,8 @@ export async function renewToken() {
   }
 
   try {
-    const response = await axios.post(`${CONFIG.apiUrl}/authorization/token/refresh/`, { 
-      refresh: refreshToken 
+    const response = await axios.post(`${CONFIG.apiUrl}/authorization/token/refresh/`, {
+      refresh: refreshToken,
     });
     const newAccessToken = response.data.accessToken;
     setSession(newAccessToken, refreshToken);

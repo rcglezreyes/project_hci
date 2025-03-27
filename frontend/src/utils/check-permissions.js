@@ -27,22 +27,22 @@ export const listRolesAndSubroles = (role) =>
         CONFIG.roles.medicalStaff,
         CONFIG.roles.patient,
         CONFIG.roles.technical,
-        CONFIG.roles.departmentChief
+        CONFIG.roles.departmentChief,
       ]
     : role?.toLowerCase().indexOf(CONFIG.roles.administrator.toLowerCase()) !== -1
       ? [
-            CONFIG.roles.administrator,
-            CONFIG.roles.medicalStaff,
-            CONFIG.roles.patient,
-            CONFIG.roles.technical,
-            CONFIG.roles.departmentChief
+          CONFIG.roles.administrator,
+          CONFIG.roles.medicalStaff,
+          CONFIG.roles.patient,
+          CONFIG.roles.technical,
+          CONFIG.roles.departmentChief,
         ]
       : role?.toLowerCase().indexOf(CONFIG.roles.departmentChief.toLowerCase()) !== -1
         ? [
             CONFIG.roles.departmentChief,
             CONFIG.roles.medicalStaff,
             CONFIG.roles.patient,
-            CONFIG.roles.technical
+            CONFIG.roles.technical,
           ]
         : role?.toLowerCase().indexOf(CONFIG.roles.patient.toLowerCase()) !== -1
           ? [CONFIG.roles.patient]
@@ -63,6 +63,4 @@ export const isMedicalStaff = (role) =>
 export const isPatient = (role) =>
   role?.toLowerCase().indexOf(CONFIG.roles.patient.toLowerCase()) !== -1;
 export const isTechnical = (role) =>
-    role?.toLowerCase().indexOf(CONFIG.roles.technical.toLowerCase()) !== -1;
-
-
+  role?.toLowerCase().indexOf(CONFIG.roles.technical.toLowerCase()) !== -1;

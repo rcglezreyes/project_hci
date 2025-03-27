@@ -301,56 +301,56 @@ const Item = ({ item, sx, router, userLogged, ...other }) => (
           </Box>
           <br />
           {item.projectDefaultTasks.length > 0 && (
+            <Box
+              component="span"
+              sx={{ display: 'inline-flex', alignItems: 'center', typography: 'body2', gap: 2 }}
+            >
               <Box
                 component="span"
-                sx={{ display: 'inline-flex', alignItems: 'center', typography: 'body2', gap: 2 }}
+                key={`${item.id}-percentage`}
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  typography: 'body2',
+                  color: 'backgound.neutral',
+                  gap: 0,
+                  cursor: 'pointer',
+                }}
               >
-                <Box
-                  component="span"
-                  key={`${item.id}-percentage`}
-                  sx={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    typography: 'body2',
-                    color: 'backgound.neutral',
-                    gap: 0,
-                    cursor: 'pointer',
-                  }}
+                <Label
+                  color={
+                    totalPercentageProject(item, CONFIG) === 100
+                      ? 'success'
+                      : totalPercentageProject(item, CONFIG) < 100 &&
+                          totalPercentageProject(item, CONFIG) > 0
+                        ? 'warning'
+                        : 'default'
+                  }
                 >
-                  <Label
-                    color={
+                  <Iconify
+                    icon={
                       totalPercentageProject(item, CONFIG) === 100
-                        ? 'success'
+                        ? 'gis:flag-finish-b-o'
                         : totalPercentageProject(item, CONFIG) < 100 &&
                             totalPercentageProject(item, CONFIG) > 0
-                          ? 'warning'
-                          : 'default'
+                          ? 'grommet-icons:in-progress'
+                          : 'tabler:clock-stop'
                     }
-                  >
-                    <Iconify
-                      icon={
-                        totalPercentageProject(item, CONFIG) === 100
-                          ? 'gis:flag-finish-b-o'
-                          : totalPercentageProject(item, CONFIG) < 100 &&
-                              totalPercentageProject(item, CONFIG) > 0
-                            ? 'grommet-icons:in-progress'
-                            : 'tabler:clock-stop'
-                      }
-                      width={16}
-                      height={16}
-                    />
-                    <span style={{ fontSize: 'x-small' }}>
-                      {totalPercentageProject(item, CONFIG) === 100
-                        ? 'Finished'
-                        : totalPercentageProject(item, CONFIG) < 100 &&
-                            totalPercentageProject(item, CONFIG) > 0
-                          ? 'In Progress'
-                          : 'Not Started'}
-                    </span>
-                  </Label>
-                </Box>
+                    width={16}
+                    height={16}
+                  />
+                  <span style={{ fontSize: 'x-small' }}>
+                    {totalPercentageProject(item, CONFIG) === 100
+                      ? 'Finished'
+                      : totalPercentageProject(item, CONFIG) < 100 &&
+                          totalPercentageProject(item, CONFIG) > 0
+                        ? 'In Progress'
+                        : 'Not Started'}
+                  </span>
+                </Label>
               </Box>
-            )}
+            </Box>
+          )}
         </>
       }
     />

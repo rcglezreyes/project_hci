@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { useContext } from 'react';
 
 import Box from '@mui/material/Box';
@@ -17,7 +16,7 @@ import IconButton from '@mui/material/IconButton';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { fDate, fDuration } from 'src/utils/format-time';
+import { fDate } from 'src/utils/format-time';
 
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
@@ -67,28 +66,28 @@ export function AdmissionTableRow({ row, selected, onSelectRow, onDeleteRow, ref
             </Stack>
           </TableCell>
 
-            <TableCell sx={{ cursor: 'pointer' }}>
-                <Stack spacing={2} direction="row" alignItems="center">
-                    <Avatar alt={row.medicalStaff.user.username} src={row.medicalStaff.user.avatarUrl} />
+          <TableCell sx={{ cursor: 'pointer' }}>
+            <Stack spacing={2} direction="row" alignItems="center">
+              <Avatar alt={row.medicalStaff.user.username} src={row.medicalStaff.user.avatarUrl} />
 
-                    <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
-                        <Link color="inherit" onClick={quickEdit.onTrue} sx={{ cursor: 'pointer' }}>
-                            {row.medicalStaff.user.firstName} {row.medicalStaff.user.lastName}
-                        </Link>
-                        <Box component="span" sx={{ color: 'text.disabled' }}>
-                            {row.medicalStaff.user.email}
-                        </Box>
-                    </Stack>
-                </Stack>
-            </TableCell>
+              <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
+                <Link color="inherit" onClick={quickEdit.onTrue} sx={{ cursor: 'pointer' }}>
+                  {row.medicalStaff.user.firstName} {row.medicalStaff.user.lastName}
+                </Link>
+                <Box component="span" sx={{ color: 'text.disabled' }}>
+                  {row.medicalStaff.user.email}
+                </Box>
+              </Stack>
+            </Stack>
+          </TableCell>
 
           <TableCell sx={{ whiteSpace: 'nowrap', cursor: 'pointer' }} onClick={quickEdit.onTrue}>
             {fDate(row.date)}
           </TableCell>
 
-            <TableCell sx={{ whiteSpace: 'nowrap', cursor: 'pointer' }} onClick={quickEdit.onTrue}>
-                {row.daysInAdmission}
-            </TableCell>
+          <TableCell sx={{ whiteSpace: 'nowrap', cursor: 'pointer' }} onClick={quickEdit.onTrue}>
+            {row.daysInAdmission}
+          </TableCell>
 
           <TableCell>
             <Stack direction="row" alignItems="center">
@@ -114,7 +113,8 @@ export function AdmissionTableRow({ row, selected, onSelectRow, onDeleteRow, ref
           </TableCell>
 
           <TableCell sx={{ cursor: 'pointer' }}>
-            Patient: <Stack spacing={2} direction="row" alignItems="center">
+            Patient:{' '}
+            <Stack spacing={2} direction="row" alignItems="center">
               <Avatar alt={row.patient.user.username} src={row.patient.user.avatarUrl} />
 
               <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
@@ -126,22 +126,23 @@ export function AdmissionTableRow({ row, selected, onSelectRow, onDeleteRow, ref
                 </Box>
               </Stack>
             </Stack>
-              Medical Staff: <Stack spacing={2} direction="row" alignItems="center">
+            Medical Staff:{' '}
+            <Stack spacing={2} direction="row" alignItems="center">
               <Avatar alt={row.medicalStaff.user.username} src={row.medicalStaff.user.avatarUrl} />
 
               <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
-                  <Link color="inherit" onClick={quickEdit.onTrue} sx={{ cursor: 'pointer' }}>
-                      {row.medicalStaff.user.firstName} {row.medicalStaff.user.lastName}
-                  </Link>
-                  <Box component="span" sx={{ color: 'text.disabled' }}>
-                      {row.medicalStaff.user.email}
-                  </Box>
+                <Link color="inherit" onClick={quickEdit.onTrue} sx={{ cursor: 'pointer' }}>
+                  {row.medicalStaff.user.firstName} {row.medicalStaff.user.lastName}
+                </Link>
+                <Box component="span" sx={{ color: 'text.disabled' }}>
+                  {row.medicalStaff.user.email}
+                </Box>
               </Stack>
-          </Stack>
+            </Stack>
             Date: {fDate(row.date)}
             <br />
-              Days: {row.daysInAdmission}
-              <br/>
+            Days: {row.daysInAdmission}
+            <br />
             <ListItemText
               secondary={
                 <IconButton

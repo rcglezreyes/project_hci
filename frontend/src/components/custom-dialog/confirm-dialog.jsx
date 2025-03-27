@@ -9,20 +9,30 @@ import DialogContent from '@mui/material/DialogContent';
 // ----------------------------------------------------------------------
 
 export function ConfirmDialog({ open, title, action, content, onClose, maxWidth, ...other }) {
-
   const dialogRef = useRef(null);
 
   const handleClose = (event, reason) => {
     if (onClose) {
       onClose(event, reason);
     }
-    if (document.activeElement && dialogRef.current && dialogRef.current.contains(document.activeElement)) {
+    if (
+      document.activeElement &&
+      dialogRef.current &&
+      dialogRef.current.contains(document.activeElement)
+    ) {
       document.activeElement.blur();
     }
   };
 
   return (
-    <Dialog fullWidth maxWidth={!maxWidth ? 'xs' : maxWidth} open={open} onClose={handleClose} ref={dialogRef} {...other}>
+    <Dialog
+      fullWidth
+      maxWidth={!maxWidth ? 'xs' : maxWidth}
+      open={open}
+      onClose={handleClose}
+      ref={dialogRef}
+      {...other}
+    >
       <DialogTitle sx={{ pb: 2 }}>{title}</DialogTitle>
 
       {content && <DialogContent sx={{ typography: 'body2' }}> {content} </DialogContent>}

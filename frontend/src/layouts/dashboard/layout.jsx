@@ -27,14 +27,9 @@ import { AccountDrawer } from '../components/account-drawer';
 import { SettingsButton } from '../components/settings-button';
 import { NotificationsDrawer } from '../components/notifications-drawer';
 
-
-
-
-
 // ----------------------------------------------------------------------
 
 export function DashboardLayout({ sx, children, header, data }) {
-
   const userLogged = useMemo(() => JSON.parse(sessionStorage.getItem('userLogged')), []);
 
   // const {
@@ -159,7 +154,7 @@ export function DashboardLayout({ sx, children, header, data }) {
                 {/* -- Language popover -- */}
                 {/* <LanguagePopover data={allLangs} /> */}
                 {/* -- Notifications popover -- */}
-                 <NotificationsDrawer />
+                <NotificationsDrawer />
                 {/* -- Contacts popover -- */}
                 {/* <ContactsPopover data={_contacts} /> */}
                 {/* -- Settings button -- */}

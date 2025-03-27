@@ -1,0 +1,29 @@
+# BACKEND
+
+1. Build local:
+docker compose -f docker-compose.prod.yml build aws_backend
+2. Tag local:
+docker tag project_hci-aws_backend:latest 351981951783.dkr.ecr.us-east-2.amazonaws.com/hci/backend:latest
+3. Push AWS:
+docker push 351981951783.dkr.ecr.us-east-2.amazonaws.com/hci/backend:latest
+
+# FRONTEND
+
+1. Build local:
+docker compose -f docker-compose.prod.yml build aws_frontend
+2. Tag local:
+docker tag project_hci-aws_frontend:latest 351981951783.dkr.ecr.us-east-2.amazonaws.com/hci/frontend:latest
+3. Push AWS:
+docker push 351981951783.dkr.ecr.us-east-2.amazonaws.com/hci/frontend:latest
+
+# MONGO EXPRESS
+
+1. Build local: docker compose -f docker-compose.prod.yml build aws_mongo_express
+2. Tag local: docker tag project_hci-aws_mongo_express:latest 351981951783.dkr.ecr.us-east-2.amazonaws.com/hci/mongo_express:latest
+3. Push AWS: docker push 351981951783.dkr.ecr.us-east-2.amazonaws.com/hci/mongo_express:latest
+
+# MONGO DB
+
+1. Build local: docker compose -f docker-compose.prod.yml build aws_mongo_db
+2. Tag local: docker tag project_hci-aws_mongo_db:latest 351981951783.dkr.ecr.us-east-2.amazonaws.com/hci/mongo_db:latest
+3. Push AWS: docker push 351981951783.dkr.ecr.us-east-2.amazonaws.com/hci/mongo_db:latest

@@ -28,141 +28,143 @@ import { UserQuickChangePasswordForm } from 'src/sections/user/user-quick-change
 import { AccountButton } from './account-button';
 import { SignOutButton } from './sign-out-button';
 
-
 // ----------------------------------------------------------------------
 
 export function AccountDrawer({ data = [], sx, ...other }) {
+  const theme = useTheme();
 
+  const router = useRouter();
 
-    const theme = useTheme();
+  const pathname = usePathname();
 
-    const router = useRouter();
+  const quickChangePassword = useBoolean();
 
-    const pathname = usePathname();
+  const [isDownloadingBackup, setIsDownloadingBackup] = useState(false);
 
-    const quickChangePassword = useBoolean();
+  const userLogged = useMemo(() => JSON.parse(sessionStorage.getItem('userLogged')), []);
 
-    const [isDownloadingBackup, setIsDownloadingBackup] = useState(false);
+  const [open, setOpen] = useState(false);
 
-    const userLogged = useMemo(() => JSON.parse(sessionStorage.getItem('userLogged')), []);
+  const handleOpenDrawer = useCallback(() => {
+    setOpen(true);
+  }, []);
 
-    const [open, setOpen] = useState(false);
+  const handleCloseDrawer = useCallback(() => {
+    setOpen(false);
+  }, []);
 
-    const handleOpenDrawer = useCallback(() => {
-        setOpen(true);
-    }, []);
+  const handleClickItem = useCallback(
+    (path) => {
+      handleCloseDrawer();
+      router.push(path);
+    },
+    [handleCloseDrawer, router]
+  );
 
-    const handleCloseDrawer = useCallback(() => {
-        setOpen(false);
-    }, []);
-
-    const handleClickItem = useCallback(
-        (path) => {
-            handleCloseDrawer();
-            router.push(path);
+  const renderAvatar = (
+    <AnimateAvatar
+      width={96}
+      slotProps={{
+        avatar: {
+          src: userLogged?.data?.avatar_url,
+          alt: userLogged?.data?.firstName || userLogged?.data?.first_name,
         },
-        [handleCloseDrawer, router]
-    );
+        overlay: {
+          border: 2,
+          spacing: 3,
+          color: `linear-gradient(135deg, ${varAlpha(theme.vars.palette.primary.mainChannel, 0)} 25%, ${theme.vars.palette.primary.main} 100%)`,
+        },
+      }}
+    >
+      {userLogged?.data.firstName?.charAt(0).toUpperCase() ||
+        userLogged?.data.first_name?.charAt(0).toUpperCase()}
+    </AnimateAvatar>
+  );
 
-    const renderAvatar = (
-        <AnimateAvatar
-            width={96}
-            slotProps={{
-                avatar: { src: userLogged?.data?.avatar_url, alt: userLogged?.data?.firstName || userLogged?.data?.first_name },
-                overlay: {
-                    border: 2,
-                    spacing: 3,
-                    color: `linear-gradient(135deg, ${varAlpha(theme.vars.palette.primary.mainChannel, 0)} 25%, ${theme.vars.palette.primary.main} 100%)`,
-                },
-            }}
+  const downloadBackup = async () => {
+    try {
+      const response = await axios.get(`${CONFIG.apiUrl}/main/download/backup/`, {
+        responseType: 'blob',
+      });
+
+      const contentDisposition = response.headers['content-disposition'];
+
+      console.log('response.headers:', response.headers);
+      let fileName = 'download.zip';
+      if (contentDisposition) {
+        const fileNameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+        if (fileNameMatch && fileNameMatch.length > 1) {
+          fileName = fileNameMatch[1];
+        }
+      }
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error al descargar el archivo:', error);
+    }
+  };
+
+  const downloadBackupHandler = async () => {
+    setIsDownloadingBackup(true);
+    try {
+      await downloadBackup();
+    } catch (error) {
+      console.error('Error al descargar el backup:', error);
+    } finally {
+      setIsDownloadingBackup(false);
+    }
+  };
+
+  return (
+    <>
+      <AccountButton
+        onClick={handleOpenDrawer}
+        photoURL={userLogged?.data?.avatar_url}
+        displayName={`${userLogged?.data?.first_name} ${userLogged?.data?.last_name}`}
+        sx={sx}
+        {...other}
+      />
+
+      <Drawer
+        open={open}
+        onClose={handleCloseDrawer}
+        anchor="right"
+        slotProps={{ backdrop: { invisible: true } }}
+        PaperProps={{ sx: { width: 320 } }}
+      >
+        <IconButton
+          onClick={handleCloseDrawer}
+          sx={{ top: 12, left: 12, zIndex: 9, position: 'absolute' }}
         >
-            {userLogged?.data.firstName?.charAt(0).toUpperCase() || userLogged?.data.first_name?.charAt(0).toUpperCase()}
-        </AnimateAvatar>
-    );
+          <Iconify icon="mingcute:close-line" />
+        </IconButton>
 
-    const downloadBackup = async () => {
-        try {
-            const response = await axios.get(`${CONFIG.apiUrl}/main/download/backup/`, {
-                responseType: 'blob',
-            });
+        <Scrollbar>
+          <Stack alignItems="center" sx={{ pt: 8 }}>
+            {renderAvatar}
 
-            const contentDisposition = response.headers['content-disposition'];
+            <Typography variant="subtitle1" noWrap sx={{ mt: 2 }}>
+              {userLogged?.data.firstName || userLogged?.data.first_name}{' '}
+              {userLogged?.data.lastName || userLogged?.data.last_name}
+            </Typography>
 
-            console.log('response.headers:', response.headers);
-            let fileName = 'download.zip';
-            if (contentDisposition) {
-                const fileNameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
-                if (fileNameMatch && fileNameMatch.length > 1) {
-                    fileName = fileNameMatch[1];
-                }
-            }
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', fileName);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            window.URL.revokeObjectURL(url);
-        } catch (error) {
-            console.error('Error al descargar el archivo:', error);
-        }
-    };
+            <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }} noWrap>
+              {userLogged?.data.email}
+            </Typography>
 
-    const downloadBackupHandler = async () => {
-        setIsDownloadingBackup(true);
-        try {
-            await downloadBackup();
-        } catch (error) {
-            console.error('Error al descargar el backup:', error);
-        } finally {
-            setIsDownloadingBackup(false);
-        }
-    };
+            <Typography variant="subtitle2" sx={{ color: 'text.primary', mt: 0.5 }} noWrap>
+              {userLogged?.data.user_role.name || userLogged?.data.userRole.name}
+            </Typography>
+          </Stack>
 
-    return (
-        <>
-            <AccountButton
-                onClick={handleOpenDrawer}
-                photoURL={userLogged?.data?.avatar_url}
-                displayName={`${userLogged?.data?.first_name} ${userLogged?.data?.last_name}`}
-                sx={sx}
-                {...other}
-            />
-
-            <Drawer
-                open={open}
-                onClose={handleCloseDrawer}
-                anchor="right"
-                slotProps={{ backdrop: { invisible: true } }}
-                PaperProps={{ sx: { width: 320 } }}
-            >
-                <IconButton
-                    onClick={handleCloseDrawer}
-                    sx={{ top: 12, left: 12, zIndex: 9, position: 'absolute' }}
-                >
-                    <Iconify icon="mingcute:close-line" />
-                </IconButton>
-
-                <Scrollbar>
-                    <Stack alignItems="center" sx={{ pt: 8 }}>
-                        {renderAvatar}
-
-                        <Typography variant="subtitle1" noWrap sx={{ mt: 2 }}>
-                            {userLogged?.data.firstName || userLogged?.data.first_name} {userLogged?.data.lastName || userLogged?.data.last_name}
-                        </Typography>
-
-                        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }} noWrap>
-                            {userLogged?.data.email}
-                        </Typography>
-
-                        <Typography variant="subtitle2" sx={{ color: 'text.primary', mt: 0.5 }} noWrap>
-                            {userLogged?.data.user_role.name || userLogged?.data.userRole.name}
-                        </Typography>
-                    </Stack>
-
-                    <Stack direction="row" spacing={1} flexWrap="wrap" justifyContent="center" sx={{ p: 3 }}>
-                        {/* {[...Array(3)].map((_, index) => (
+          <Stack direction="row" spacing={1} flexWrap="wrap" justifyContent="center" sx={{ p: 3 }}>
+            {/* {[...Array(3)].map((_, index) => (
               <Tooltip
                 key={_mock.fullName(index + 1)}
                 title={`Switch to: ${_mock.fullName(index + 1)}`}
@@ -175,7 +177,7 @@ export function AccountDrawer({ data = [], sx, ...other }) {
               </Tooltip>
             ))} */}
 
-                        {/* <Tooltip title="Change password">
+            {/* <Tooltip title="Change password">
               <IconButton
                 sx={{
                   bgcolor: varAlpha(theme.vars.palette.grey['500Channel'], 0.08),
@@ -185,87 +187,91 @@ export function AccountDrawer({ data = [], sx, ...other }) {
                 <Iconify icon="mdi:password-reset" />
               </IconButton>
             </Tooltip> */}
-                    </Stack>
+          </Stack>
 
-                    <Stack
-                        sx={{
-                            py: 3,
-                            px: 2.5,
-                            borderTop: `dashed 1px ${theme.vars.palette.divider}`,
-                            borderBottom: `dashed 1px ${theme.vars.palette.divider}`,
-                        }}
-                    >
-                        {data.map((option) => {
-                            const rootLabel = pathname.includes('/dashboard') ? 'Home' : 'Dashboard';
+          <Stack
+            sx={{
+              py: 3,
+              px: 2.5,
+              borderTop: `dashed 1px ${theme.vars.palette.divider}`,
+              borderBottom: `dashed 1px ${theme.vars.palette.divider}`,
+            }}
+          >
+            {data.map((option) => {
+              const rootLabel = pathname.includes('/dashboard') ? 'Home' : 'Dashboard';
 
-                            const rootHref = pathname.includes('/dashboard') ? '/' : paths.dashboard.root;
+              const rootHref = pathname.includes('/dashboard') ? '/' : paths.dashboard.root;
 
-                            return (
-                                <MenuItem
-                                    key={option.label}
-                                    onClick={() => {
-                                        if (option.label === 'Download backup') {
-                                            downloadBackupHandler();
-                                        } else if (option.label === 'Change password') {
-                                            quickChangePassword.onTrue();
-                                            handleCloseDrawer();
-                                        } else if (option.label === 'Home') {
-                                            handleClickItem(rootHref);
-                                        } else {
-                                            handleClickItem(option.href);
-                                        }
-                                    }}
-                                    sx={{
-                                        py: 1,
-                                        color: 'text.secondary',
-                                        '& svg': { width: 24, height: 24 },
-                                        '&:hover': { color: 'text.primary' },
-                                    }}
-                                    disabled={isDownloadingBackup}
-                                >
-                                    {option.icon}
+              return (
+                <MenuItem
+                  key={option.label}
+                  onClick={() => {
+                    if (option.label === 'Download backup') {
+                      downloadBackupHandler();
+                    } else if (option.label === 'Change password') {
+                      quickChangePassword.onTrue();
+                      handleCloseDrawer();
+                    } else if (option.label === 'Home') {
+                      handleClickItem(rootHref);
+                    } else {
+                      handleClickItem(option.href);
+                    }
+                  }}
+                  sx={{
+                    py: 1,
+                    color: 'text.secondary',
+                    '& svg': { width: 24, height: 24 },
+                    '&:hover': { color: 'text.primary' },
+                  }}
+                  disabled={isDownloadingBackup}
+                >
+                  {option.icon}
 
-                                    <Box component="span" sx={{ ml: 2, color: isDownloadingBackup ? 'text.disabled' : 'inherit' }}>
-                                        {option.label === 'Home'
-                                            ? rootLabel
-                                            : option.label === 'Download backup'
-                                                ? isDownloadingBackup
-                                                    ? (
-                                                        <>
-                                                            <CircularProgress size={12} sx={{ mr: 3, mt: 2, ml: 1 }} />
-                                                            Downloading backup...
-                                                        </>
-                                                    )
-                                                    : 'Download backup'
-                                                : option.label
-                                        }
-                                    </Box>
+                  <Box
+                    component="span"
+                    sx={{ ml: 2, color: isDownloadingBackup ? 'text.disabled' : 'inherit' }}
+                  >
+                    {option.label === 'Home' ? (
+                      rootLabel
+                    ) : option.label === 'Download backup' ? (
+                      isDownloadingBackup ? (
+                        <>
+                          <CircularProgress size={12} sx={{ mr: 3, mt: 2, ml: 1 }} />
+                          Downloading backup...
+                        </>
+                      ) : (
+                        'Download backup'
+                      )
+                    ) : (
+                      option.label
+                    )}
+                  </Box>
 
-                                    {option.info && (
-                                        <Label color="error" sx={{ ml: 1 }}>
-                                            {option.info}
-                                        </Label>
-                                    )}
-                                </MenuItem>
-                            );
-                        })}
-                    </Stack>
+                  {option.info && (
+                    <Label color="error" sx={{ ml: 1 }}>
+                      {option.info}
+                    </Label>
+                  )}
+                </MenuItem>
+              );
+            })}
+          </Stack>
 
-                    {/* <Box sx={{ px: 2.5, py: 3 }}>
+          {/* <Box sx={{ px: 2.5, py: 3 }}>
             <UpgradeBlock />
           </Box> */}
-                </Scrollbar>
+        </Scrollbar>
 
-                <Box sx={{ p: 5.5 }}>
-                    <SignOutButton onClose={handleCloseDrawer} />
-                </Box>
-            </Drawer>
-            <UserQuickChangePasswordForm
-                currentUser={userLogged?.data}
-                open={quickChangePassword.value}
-                onClose={quickChangePassword.onFalse}
-                isSameUser={!!userLogged}
-            />
-        </>
-    );
+        <Box sx={{ p: 5.5 }}>
+          <SignOutButton onClose={handleCloseDrawer} />
+        </Box>
+      </Drawer>
+      <UserQuickChangePasswordForm
+        currentUser={userLogged?.data}
+        open={quickChangePassword.value}
+        onClose={quickChangePassword.onFalse}
+        isSameUser={!!userLogged}
+      />
+    </>
+  );
 }

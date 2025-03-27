@@ -80,12 +80,7 @@ export function UserListView() {
 
   const confirm = useBoolean();
 
-  const {
-    loadedUsers,
-    refetchUsers,
-    loadedUserRoles,
-    refetchUserRoles,
-  } = useDataContext();
+  const { loadedUsers, refetchUsers, loadedUserRoles, refetchUserRoles } = useDataContext();
 
   const [tableData, setTableData] = useState([]);
 

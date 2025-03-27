@@ -1,4 +1,3 @@
-
 import { listRolesAndSubroles } from 'src/utils/check-permissions';
 
 import { CONFIG } from 'src/config-global';

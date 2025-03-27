@@ -17,7 +17,11 @@ export const iconBox = (name, width, folder = 'navbar') => (
   />
 );
 
-export const underscoreToCamelCase = (str) => str.split('_').map((word, index) => {
-    if (index === 0) return word.toLowerCase();
-    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-  }).join('')
+export const underscoreToCamelCase = (str) =>
+  str
+    .split('_')
+    .map((word, index) => {
+      if (index === 0) return word.toLowerCase();
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join('');

@@ -32,13 +32,13 @@ export function UserQuickChangePasswordForm({ currentUser, open, onClose, isSame
   const UserQuickChangePasswordSchema = isSameUser
     ? zod
         .object({
-          password: zod.string().min(6, { message: 'Password must be at least 6 characters!' }),
+          password: zod.string().min(5, { message: 'Password must be at least 5 characters!' }),
           newPassword: zod
             .string()
-            .min(6, { message: 'New password must be at least 6 characters!' }),
+            .min(5, { message: 'New password must be at least 5 characters!' }),
           confirmPassword: zod
             .string()
-            .min(6, { message: 'Confirm password must be at least 6 characters!' }),
+            .min(5, { message: 'Confirm password must be at least 5 characters!' }),
         })
         .refine((data) => data.newPassword === data.confirmPassword, {
           message: 'Passwords must match',

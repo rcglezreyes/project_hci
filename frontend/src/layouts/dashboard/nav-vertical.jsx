@@ -18,7 +18,7 @@ export function NavVertical({ sx, data, slots, isNavMini, layoutQuery, onToggleN
     <>
       {slots?.topArea ?? (
         <Box sx={{ pl: 3.5, pt: 1, pb: 1, mt: -10, mb: -5, ml: 2 }}>
-          <Logo isSingle={false} sx={{ width: '200px', height: 'auto' }}/>
+          <Logo isSingle={false} sx={{ width: '200px', height: 'auto' }} />
         </Box>
       )}
 
@@ -34,7 +34,7 @@ export function NavVertical({ sx, data, slots, isNavMini, layoutQuery, onToggleN
     <>
       {slots?.topArea ?? (
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 1, ml: 0, mt: -15, mb: -13 }}>
-          <Logo sx={{ width: '80px', height: 'auto' }}/>
+          <Logo sx={{ width: '80px', height: 'auto' }} />
         </Box>
       )}
 

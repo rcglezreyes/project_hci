@@ -17,9 +17,5 @@ export function LoadingProvider({ children }) {
     [loading, error, component, isMobile]
   );
 
-  return (
-    <LoadingContext.Provider value={value}>
-      {children}
-    </LoadingContext.Provider>
-  );
+  return <LoadingContext.Provider value={value}>{children}</LoadingContext.Provider>;
 }

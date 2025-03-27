@@ -22,7 +22,6 @@ export function AuthProvider({ children }) {
       const refreshToken = sessionStorage.getItem(STORAGE_KEY_REFRESH);
 
       if (accessToken && isValidToken(accessToken)) {
-
         setSession(accessToken, refreshToken);
 
         const res = await axios.get(endpoints.auth.me);

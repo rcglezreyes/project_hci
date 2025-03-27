@@ -21,7 +21,7 @@ import { FileThumbnail } from 'src/components/file-thumbnail';
 
 import { useDataContext } from 'src/auth/context/data/data-context';
 
-import {underscoreToCamelCase} from "../../../utils/utils";
+import { underscoreToCamelCase } from '../../../utils/utils';
 
 // ----------------------------------------------------------------------
 

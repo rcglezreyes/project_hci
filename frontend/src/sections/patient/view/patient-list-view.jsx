@@ -298,10 +298,7 @@ export function PatientListView() {
             ))}
           </Tabs>
 
-          <PatientTableToolbar
-            filters={filters}
-            onResetPage={table.onResetPage}
-          />
+          <PatientTableToolbar filters={filters} onResetPage={table.onResetPage} />
 
           {canReset && (
             <PatientTableFiltersResult
@@ -460,7 +457,9 @@ function applyFilter({ inputData, comparator, filters }) {
         patient?.user?.firstName?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         patient?.user?.lastName?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         patient?.user?.email?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        patient?.disabilities?.some(disability => disability.name.toLowerCase().includes(name.toLowerCase()))
+        patient?.disabilities?.some((disability) =>
+          disability.name.toLowerCase().includes(name.toLowerCase())
+        )
     );
   }
 

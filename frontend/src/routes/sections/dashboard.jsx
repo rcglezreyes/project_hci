@@ -52,7 +52,6 @@ const Page500 = lazy(() => import('src/pages/error/500'));
 const Page403 = lazy(() => import('src/pages/error/403'));
 const Page404 = lazy(() => import('src/pages/error/404'));
 
-
 // ----------------------------------------------------------------------
 
 const layoutContent = (
@@ -74,39 +73,39 @@ export const dashboardRoutes = (listPermissions, user) => [
       },
       {
         path: 'analytics',
-        element:  <OverviewAnalyticsPage />,
+        element: <OverviewAnalyticsPage />,
       },
       {
         path: 'admission',
         children: [
           {
             element: listRolesAndSubroles(user?.user_role?.name).includes(
-                CONFIG.roles.medicalStaff
+              CONFIG.roles.medicalStaff
             ) ? (
-                <AdmissionListPage />
+              <AdmissionListPage />
             ) : (
-                <Page403 />
+              <Page403 />
             ),
             index: true,
           },
           {
             path: 'list',
             element: listRolesAndSubroles(user?.user_role?.name).includes(
-                CONFIG.roles.medicalStaff
+              CONFIG.roles.medicalStaff
             ) ? (
-                <AdmissionListPage />
+              <AdmissionListPage />
             ) : (
-                <Page403 />
+              <Page403 />
             ),
           },
           {
             path: 'new',
             element: listRolesAndSubroles(user?.user_role?.name).includes(
-                CONFIG.roles.medicalStaff
+              CONFIG.roles.medicalStaff
             ) ? (
-                <AdmissionCreatePage />
+              <AdmissionCreatePage />
             ) : (
-                <Page403 />
+              <Page403 />
             ),
           },
         ],
@@ -116,32 +115,32 @@ export const dashboardRoutes = (listPermissions, user) => [
         children: [
           {
             element: listRolesAndSubroles(user?.user_role?.name).includes(
-                CONFIG.roles.departmentChief
+              CONFIG.roles.departmentChief
             ) ? (
-                <MedicalStaffListPage />
+              <MedicalStaffListPage />
             ) : (
-                <Page403 />
+              <Page403 />
             ),
             index: true,
           },
           {
             path: 'list',
             element: listRolesAndSubroles(user?.user_role?.name).includes(
-                CONFIG.roles.departmentChief
+              CONFIG.roles.departmentChief
             ) ? (
-                <MedicalStaffListPage />
+              <MedicalStaffListPage />
             ) : (
-                <Page403 />
+              <Page403 />
             ),
           },
           {
             path: 'new',
             element: listRolesAndSubroles(user?.user_role?.name).includes(
-                CONFIG.roles.departmentChief
+              CONFIG.roles.departmentChief
             ) ? (
-                <MedicalStaffCreatePage />
+              <MedicalStaffCreatePage />
             ) : (
-                <Page403 />
+              <Page403 />
             ),
           },
         ],
@@ -151,11 +150,11 @@ export const dashboardRoutes = (listPermissions, user) => [
         children: [
           {
             element: listRolesAndSubroles(user?.user_role?.name).includes(
-                CONFIG.roles.medicalStaff
+              CONFIG.roles.medicalStaff
             ) ? (
-                <PatientListPage />
+              <PatientListPage />
             ) : (
-                <Page403 />
+              <Page403 />
             ),
             index: true,
           },
@@ -484,11 +483,11 @@ export const dashboardRoutes = (listPermissions, user) => [
               children: [
                 {
                   element: listRolesAndSubroles(user?.user_role?.name).includes(
-                      CONFIG.roles.departmentChief
+                    CONFIG.roles.departmentChief
                   ) ? (
-                      <UserListPage />
+                    <UserListPage />
                   ) : (
-                      <Page403 />
+                    <Page403 />
                   ),
                   index: true,
                 },

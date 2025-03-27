@@ -55,7 +55,7 @@ export function Section({
         {/* <Box sx={{ mb: -5 }} >
           <img src='/logo/logo.png' alt="img" style={{ width: '200px' }} />
         </Box> */}
-        
+
         <Typography variant="h4" sx={{ textAlign: 'center' }}>
           {title || ''}
         </Typography>

@@ -85,7 +85,7 @@ export function MedicalStaffListView() {
 
   useEffect(() => {
     if (refetchMedicalStaffs) {
-        refetchMedicalStaffs();
+      refetchMedicalStaffs();
     }
     setTableData(loadedMedicalStaffs || []);
   }, [refetchMedicalStaffs, loadedMedicalStaffs]);
@@ -299,10 +299,7 @@ export function MedicalStaffListView() {
             ))}
           </Tabs>
 
-          <MedicalStaffTableToolbar
-            filters={filters}
-            onResetPage={table.onResetPage}
-          />
+          <MedicalStaffTableToolbar filters={filters} onResetPage={table.onResetPage} />
 
           {canReset && (
             <MedicalStaffTableFiltersResult
@@ -457,12 +454,12 @@ function applyFilter({ inputData, comparator, filters }) {
   if (name) {
     inputData = inputData.filter(
       (item) =>
-          item?.user?.username?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-          item?.user?.firstName?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-          item?.user?.lastName?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-          item?.user?.email?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-          item?.specialty?.name?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-          item?.department?.name?.toLowerCase().indexOf(name.toLowerCase()) !== -1
+        item?.user?.username?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        item?.user?.firstName?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        item?.user?.lastName?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        item?.user?.email?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        item?.specialty?.name?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        item?.department?.name?.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 

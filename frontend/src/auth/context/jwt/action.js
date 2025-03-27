@@ -12,7 +12,6 @@ export const signInWithPassword = async ({ email, password }) => {
 
     const res = await axios.post(endpoints.auth.signIn, params);
 
-
     const { accessToken } = res.data;
 
     if (!accessToken) {
@@ -33,7 +32,7 @@ export const signInWithUsernameAndPassword = async ({ username, password }) => {
     const res = await axiosInstanceBackend.post(endpoints.auth.token, params, {
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
     });
 
@@ -51,7 +50,7 @@ export const signInWithUsernameAndPassword = async ({ username, password }) => {
       const loginResponse = await axiosInstanceBackend.post(endpoints.auth.login, params, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -61,7 +60,7 @@ export const signInWithUsernameAndPassword = async ({ username, password }) => {
           data: {
             ...loginResponse.data.data,
             id: loginResponse.data.data._id,
-          }
+          },
         };
         delete loginResponse.data.data.password;
         sessionStorage.setItem('userLogged', JSON.stringify(loggedUser));
@@ -69,7 +68,6 @@ export const signInWithUsernameAndPassword = async ({ username, password }) => {
       }
       // setSession(accessToken);
     }
-
   } catch (error) {
     console.error('Error during sign in:', error);
     throw error;

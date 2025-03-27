@@ -97,7 +97,7 @@ class AdmissionType(MongoengineObjectType):
     
     patient = GenericScalar()
     medical_staff = GenericScalar()
-    diagnosis = GenericScalar()
+    diagnoses = GenericScalar()
     room = GenericScalar()
     
     def resolve_patient(self, info):
@@ -110,10 +110,10 @@ class AdmissionType(MongoengineObjectType):
         medical_staff = serialize_datetime(medical_staff)
         return dynamic_field_to_json(medical_staff)
 
-    def resolve_diagnosis(self, info):
-        diagnosis = self.diagnosis or []
-        diagnosis = serialize_datetime(diagnosis)
-        return dynamic_field_to_json(diagnosis)
+    def resolve_diagnoses(self, info):
+        diagnoses = self.diagnoses or []
+        diagnoses = serialize_datetime(diagnoses)
+        return dynamic_field_to_json(diagnoses)
 
     def resolve_room(self, info):
         room = self.room or {}

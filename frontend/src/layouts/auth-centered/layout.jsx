@@ -35,7 +35,7 @@ export function AuthCenteredLayout({ sx, children, header }) {
             leftArea: (
               <>
                 {/* -- Logo -- */}
-                <Logo sx={{ mr: -50 }}/>
+                <Logo sx={{ mr: -50 }} />
               </>
             ),
             // rightArea: (

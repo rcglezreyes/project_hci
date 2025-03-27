@@ -7,7 +7,6 @@ import { fileThumbnailClasses } from './classes';
 import { fileData, fileThumb, fileFormat } from './utils';
 import { RemoveButton, DownloadButton } from './action-buttons';
 
-
 // ----------------------------------------------------------------------
 
 export function FileThumbnail({
@@ -21,7 +20,6 @@ export function FileThumbnail({
   className,
   ...other
 }) {
-
   const [previewUrl, setPreviewUrl] = useState(null);
 
   const loadBlobUrl = async (url) => {

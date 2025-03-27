@@ -298,10 +298,7 @@ export function AdmissionListView() {
             ))}
           </Tabs>
 
-          <AdmissionTableToolbar
-            filters={filters}
-            onResetPage={table.onResetPage}
-          />
+          <AdmissionTableToolbar filters={filters} onResetPage={table.onResetPage} />
 
           {canReset && (
             <AdmissionTableFiltersResult
@@ -460,15 +457,22 @@ function applyFilter({ inputData, comparator, filters }) {
         admission?.patient?.user?.firstName?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         admission?.patient?.user?.lastName?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
         admission?.patient?.user?.email?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-        admission?.patient?.disabilities?.some(disability => disability.name.toLowerCase().includes(name.toLowerCase())) ||
-          admission?.medicalStaff?.user?.username?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-          admission?.medicalStaff?.user?.firstName?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-          admission?.medicalStaff?.user?.lastName?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-          admission?.medicalStaff?.user?.email?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-          admission?.medicalStaff?.specialty?.name?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-          admission?.medicalStaff?.department?.name?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
-          admission?.diagnoses?.some(diagnosis => diagnosis.name.toLowerCase().includes(name.toLowerCase())) ||
-          admission?.diagnosesNotes?.toLowerCase().indexOf(name.toLowerCase()) !== -1
+        admission?.patient?.disabilities?.some((disability) =>
+          disability.name.toLowerCase().includes(name.toLowerCase())
+        ) ||
+        admission?.medicalStaff?.user?.username?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        admission?.medicalStaff?.user?.firstName?.toLowerCase().indexOf(name.toLowerCase()) !==
+          -1 ||
+        admission?.medicalStaff?.user?.lastName?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        admission?.medicalStaff?.user?.email?.toLowerCase().indexOf(name.toLowerCase()) !== -1 ||
+        admission?.medicalStaff?.specialty?.name?.toLowerCase().indexOf(name.toLowerCase()) !==
+          -1 ||
+        admission?.medicalStaff?.department?.name?.toLowerCase().indexOf(name.toLowerCase()) !==
+          -1 ||
+        admission?.diagnoses?.some((diagnosis) =>
+          diagnosis.name.toLowerCase().includes(name.toLowerCase())
+        ) ||
+        admission?.diagnosesNotes?.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 

@@ -1,5 +1,7 @@
+import dayjs from "dayjs";
 import React, { useMemo, useState, useEffect } from 'react';
 
+import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import { Box, LinearProgress } from '@mui/material';
 
@@ -8,23 +10,25 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { useDataContext } from 'src/auth/context/data/data-context';
 
+import {paths} from "../../../../routes/paths";
+import {useRouter} from "../../../../routes/hooks";
+import {fDuration} from "../../../../utils/format-time";
 import { WelcomeTypography } from '../welcome-typography';
+import { AnalyticsWidgetSummary } from '../analytics-widget-summary';
+
 
 // ----------------------------------------------------------------------
 
 export function OverviewAnalyticsView() {
   localStorage.setItem('backFromProjectDetails', 'analytics');
 
+  const router = useRouter();
 
   const [titleLinearProgress, setTitleLinearProgress] = useState('Loading data...');
 
   const userLogged = useMemo(() => JSON.parse(sessionStorage.getItem('userLogged')), []);
 
-  const {
-    loadedAdmissions,
-    loadedMedicalStaffs,
-    loadedPatients,
-  } = useDataContext();
+  const { loadedAdmissions, loadedMedicalStaffs, loadedPatients } = useDataContext();
 
   const [admissions, setAdmissions] = useState([]);
 
@@ -83,6 +87,11 @@ export function OverviewAnalyticsView() {
     };
   }, []);
 
+
+  const handleLink = (link) => {
+      router.push(paths.dashboard[link].list);
+  }
+
   return (
     <>
       {!admissions || !medicalStaffs || !patients ? (
@@ -116,143 +125,65 @@ export function OverviewAnalyticsView() {
         <DashboardContent maxWidth="xl">
           <WelcomeTypography userLogged={userLogged} />
 
-          {/* <Grid container spacing={1}>
-                    <Grid xs={12} sm={6} md={2.4}>
-                      <AnalyticsWidgetSummary
-                        sx={{ cursor: 'pointer' }}
-                        title={`${CONFIG.stages.preparation}`}
-                        percent={
-                          linearRegresionCalculation(
-                            projects?.filter(
-                              proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.preparation.toLowerCase()) !== -1
-                            ).map((proj) => proj.hasPermission)
-                          )}
-                        total={
-                          projects?.filter(
-                            proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.preparation.toLowerCase()) !== -1
-                          ).length
-                        }
-                        quantity={
-                          projects?.filter(
-                            proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.preparation.toLowerCase()) !== -1
-                          ).length
-                        }
-                        color="error"
-                        icon={
-                          <img alt="icon" src={`${CONFIG.assetsDir}/assets/icons/glass/ic-preparation-stage.svg`} />
-                        }
-                        onClick={() => { }}
-                      />
-                    </Grid>
-                    <Grid xs={12} sm={6} md={2.4}>
-                      <AnalyticsWidgetSummary
-                        sx={{ cursor: 'pointer' }}
-                        title={`${CONFIG.stages.coordination}`}
-                        percent={
-                          linearRegresionCalculation(
-                            projects?.filter(
-                              proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.coordination.toLowerCase()) !== -1
-                            ).map((proj) => proj.hasPermission)
-                          )}
-                        total={
-                          projects?.filter(
-                            proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.coordination.toLowerCase()) !== -1
-                          ).length
-                        }
-                        quantity={
-                          projects?.filter(
-                            proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.coordination.toLowerCase()) !== -1
-                          ).length
-                        }
-                        color="secondary"
-                        icon={
-                          <img alt="icon" src={`${CONFIG.assetsDir}/assets/icons/glass/ic-coordination-stage.svg`} />
-                        }
-                        onClick={() => { }}
-                      />
-                    </Grid>
-                    <Grid xs={12} sm={6} md={2.4}>
-                      <AnalyticsWidgetSummary
-                        sx={{ cursor: 'pointer' }}
-                        title={`${CONFIG.stages.installation}`}
-                        percent={
-                          linearRegresionCalculation(
-                            projects?.filter(
-                              proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.installation.toLowerCase()) !== -1
-                            ).map((proj) => proj.hasPermission)
-                          )}
-                        total={
-                          projects?.filter(
-                            proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.installation.toLowerCase()) !== -1
-                          ).length
-                        }
-                        quantity={
-                          projects?.filter(
-                            proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.installation.toLowerCase()) !== -1
-                          ).length
-                        }
-                        color="info"
-                        icon={
-                          <img alt="icon" src={`${CONFIG.assetsDir}/assets/icons/glass/ic-installation-stage.svg`} />
-                        }
-                        onClick={() => { }}
-                      />
-                    </Grid>
-                    <Grid xs={12} sm={6} md={2.4}>
-                      <AnalyticsWidgetSummary
-                        sx={{ cursor: 'pointer' }}
-                        title={`${CONFIG.stages.permission}`}
-                        percent={
-                          linearRegresionCalculation(
-                            projects?.filter(
-                              proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.permission.toLowerCase()) !== -1
-                            ).map((proj) => proj.hasPermission)
-                          )}
-                        total={
-                          projects?.filter(
-                            proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.permission.toLowerCase()) !== -1
-                          ).length
-                        }
-                        quantity={
-                          projects?.filter(
-                            proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.permission.toLowerCase()) !== -1
-                          ).length
-                        }
-                        color="warning"
-                        icon={
-                          <img alt="icon" src={`${CONFIG.assetsDir}/assets/icons/glass/ic-permission-stage.svg`} />
-                        }
-                        onClick={() => { }}
-                      />
-                    </Grid>
-                    <Grid xs={12} sm={6} md={2.4}>
-                      <AnalyticsWidgetSummary
-                        sx={{ cursor: 'pointer' }}
-                        title={`${CONFIG.stages.closing}`}
-                        percent={
-                          linearRegresionCalculation(
-                            projects?.filter(
-                              proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.closing.toLowerCase()) !== -1
-                            ).map((proj) => proj.hasPermission)
-                          )}
-                        total={
-                          projects?.filter(
-                            proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.closing.toLowerCase()) !== -1
-                          ).length
-                        }
-                        quantity={
-                          projects?.filter(
-                            proj => proj.currentStage.name.toLowerCase().indexOf(CONFIG.stages.closing.toLowerCase()) !== -1
-                          ).length
-                        }
-                        color="success"
-                        icon={
-                          <img alt="icon" src={`${CONFIG.assetsDir}/assets/icons/glass/ic-closing-stage.svg`} />
-                        }
-                        onClick={() => { }}
-                      />
-                    </Grid>
-              </Grid> */}
+          <Grid container spacing={1}>
+            <Grid xs={12} sm={12} md={4}>
+              <AnalyticsWidgetSummary
+                  onClick={() => handleLink('admission')}
+                sx={{ cursor: 'pointer' }}
+                title='ADMISSIONS'
+                percent={linearRegresionCalculation(
+                  loadedAdmissions.map((adm) => adm.diagnoses.length > 1)
+                )}
+                total={loadedAdmissions?.length}
+                quantity={loadedAdmissions?.filter((adm) => adm.diagnoses.length > 1).length}
+                color="success"
+                icon={
+                  <img
+                    alt="icon"
+                    src={`${CONFIG.assetsDir}/assets/icons/glass/ic-admissions.svg`}
+                  />
+                }
+              />
+            </Grid>
+            <Grid xs={12} sm={12} md={4}>
+              <AnalyticsWidgetSummary
+                  onClick={() => {handleLink('medicalStaff')}}
+                sx={{ cursor: 'pointer' }}
+                title='MEDICAL STAFF'
+                percent={linearRegresionCalculation(
+                    loadedMedicalStaffs.map((med) => fDuration(med.graduatedDate, dayjs((new Date))))
+                )}
+                total={loadedMedicalStaffs?.length}
+                quantity={loadedMedicalStaffs?.filter((med) => fDuration(med.graduatedDate, dayjs((new Date)))).length}
+                color="info"
+                icon={
+                  <img
+                    alt="icon"
+                    src={`${CONFIG.assetsDir}/assets/icons/glass/ic-medical-staffs.svg`}
+                  />
+                }
+              />
+            </Grid>
+            <Grid xs={12} sm={12} md={4}>
+              <AnalyticsWidgetSummary
+                  onClick={() => {handleLink('patient')}}
+                sx={{ cursor: 'pointer' }}
+                title='PATIENTS'
+                percent={linearRegresionCalculation(
+                    loadedPatients.map((p) => fDuration(p.birthDate, dayjs((new Date))))
+                )}
+                total={loadedPatients?.length}
+                quantity={loadedPatients?.filter((p) => fDuration(p.birthDate, dayjs((new Date)))).length}
+                color="error"
+                icon={
+                  <img
+                    alt="icon"
+                    src={`${CONFIG.assetsDir}/assets/icons/glass/ic-patients.svg`}
+                  />
+                }
+              />
+            </Grid>
+          </Grid>
           {/* <Grid container xs={12} spacing={1}>
 
                 <Grid
@@ -333,4 +264,28 @@ export function OverviewAnalyticsView() {
       )}
     </>
   );
+}
+
+function linearRegresionCalculation(serie) {
+  const n = serie.length;
+  if (n < 2) return 0;
+  let sumX = 0;
+  let sumY = 0;
+  let sumXY = 0;
+  let sumX2 = 0;
+  for (let i = 0; i < n; i += 1) {
+    const x = i;
+    const y = serie[i];
+    sumX += x;
+    sumY += y;
+    sumXY += x * y;
+    sumX2 += x * x;
+  }
+  const pendient = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+  const intercept = (sumY - pendient * sumX) / n;
+
+  const firstValue = pendient * 0 + intercept;
+  const lastValue = pendient * (n - 1) + intercept;
+  const percentChange = ((lastValue - firstValue) / firstValue);
+  return percentChange;
 }

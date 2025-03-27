@@ -14,12 +14,14 @@ const shake = keyframes`
 
 const Animated = styled(Iconify)(({ theme, color, width }) => ({
   animation: `${shake} 1s infinite`,
-  color: color === 'warning' ? theme.palette.warning.main : theme.palette.error.main, 
-  fontSize: '5rem', 
+  color: color === 'warning' ? theme.palette.warning.main : theme.palette.error.main,
+  fontSize: '5rem',
   strokeWidth: 2,
   width: width || '5rem',
 }));
 
-const AnimatedIcon = ({icon, color, width}) => <Animated icon={icon} color={color} width={width}/>; 
+const AnimatedIcon = ({ icon, color, width }) => (
+  <Animated icon={icon} color={color} width={width} />
+);
 
 export default AnimatedIcon;

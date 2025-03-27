@@ -90,7 +90,8 @@ export function MainLayout({ sx, data, children, header }) {
                 <Box display="flex" alignItems="center" gap={{ xs: 1, sm: 1.5 }}>
                   {/* -- Settings button -- */}
                   <SettingsButton />
-                  {/* -- Sign in button -- */}<SignInButton />
+                  {/* -- Sign in button -- */}
+                  <SignInButton />
                   {/* -- Purchase button -- */}
                   <Button
                     variant="contained"

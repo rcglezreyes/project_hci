@@ -14,7 +14,6 @@ import { Iconify } from '../../iconify';
 import { uploadClasses } from '../classes';
 import { fileData, FileThumbnail } from '../../file-thumbnail';
 
-
 // ----------------------------------------------------------------------
 
 export function MultiFilePreview({
@@ -31,7 +30,6 @@ export function MultiFilePreview({
   isProject = true,
   ...other
 }) {
-
   const userLogged = useMemo(() => JSON.parse(sessionStorage.getItem('userLogged')), []);
 
   const module = isProject ? CONFIG.permissions.moduleProjects : CONFIG.permissions.moduleTasks;
@@ -90,29 +88,38 @@ export function MultiFilePreview({
                 imageView
                 file={file}
                 onRemove={
-                  (verifyPermissions(
+                  verifyPermissions(
                     listPermissions,
                     CONFIG.permissions.system,
                     module,
                     CONFIG.permissions.operationRemoveFile
-                  ) || listRolesAndSubroles(userLogged?.data?.user_role?.name).includes(CONFIG.roles.administrator)) ?
-                    () => onRemove?.(file) : null
+                  ) ||
+                  listRolesAndSubroles(userLogged?.data?.user_role?.name).includes(
+                    CONFIG.roles.administrator
+                  )
+                    ? () => onRemove?.(file)
+                    : null
                 }
                 onDownload={
-                  (verifyPermissions(
+                  verifyPermissions(
                     listPermissions,
                     CONFIG.permissions.system,
                     module,
                     CONFIG.permissions.operationDownloadFile
-                  ) || listRolesAndSubroles(userLogged?.data?.user_role?.name).includes(CONFIG.roles.administrator)) ?
-                    () => onDownload?.(file) : null
+                  ) ||
+                  listRolesAndSubroles(userLogged?.data?.user_role?.name).includes(
+                    CONFIG.roles.administrator
+                  )
+                    ? () => onDownload?.(file)
+                    : null
                 }
                 sx={{
                   width: 80,
                   height: 80,
-                  border: (theme) => `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.16)}`,
+                  border: (theme) =>
+                    `solid 1px ${varAlpha(theme.vars.palette.grey['500Channel'], 0.16)}`,
                 }}
-                slotProps={{ icon: { width: 40, height: 40, } }}
+                slotProps={{ icon: { width: 40, height: 40 } }}
                 {...slotProps?.thumbnail}
               />
             </Box>
@@ -146,22 +153,30 @@ export function MultiFilePreview({
               }}
             />
 
-            {(onRemove && (verifyPermissions(
-              listPermissions,
-              CONFIG.permissions.system,
-              module,
-              CONFIG.permissions.operationRemoveFile
-            ) || listRolesAndSubroles(userLogged?.data?.user_role?.name).includes(CONFIG.roles.administrator))) && (
+            {onRemove &&
+              (verifyPermissions(
+                listPermissions,
+                CONFIG.permissions.system,
+                module,
+                CONFIG.permissions.operationRemoveFile
+              ) ||
+                listRolesAndSubroles(userLogged?.data?.user_role?.name).includes(
+                  CONFIG.roles.administrator
+                )) && (
                 <IconButton size="small" onClick={() => onRemove(file)}>
                   <Iconify icon="mingcute:close-line" width={16} />
                 </IconButton>
               )}
-            {(onDownload && (verifyPermissions(
-              listPermissions,
-              CONFIG.permissions.system,
-              module,
-              CONFIG.permissions.operationDownloadFile
-            ) || listRolesAndSubroles(userLogged?.data?.user_role?.name).includes(CONFIG.roles.administrator))) && (
+            {onDownload &&
+              (verifyPermissions(
+                listPermissions,
+                CONFIG.permissions.system,
+                module,
+                CONFIG.permissions.operationDownloadFile
+              ) ||
+                listRolesAndSubroles(userLogged?.data?.user_role?.name).includes(
+                  CONFIG.roles.administrator
+                )) && (
                 <IconButton size="small" onClick={() => onDownload(file)}>
                   <Iconify icon="ic:outline-cloud-download" width={16} />
                 </IconButton>

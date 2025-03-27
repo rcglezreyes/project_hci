@@ -71,9 +71,9 @@ export function PatientTableRow({ row, selected, onSelectRow, onDeleteRow, refet
             {fDate(row.birthDate)}
           </TableCell>
 
-            <TableCell sx={{ whiteSpace: 'nowrap', cursor: 'pointer' }} onClick={quickEdit.onTrue}>
-                {fDuration(row.birthDate, dayjs(new Date()))}
-            </TableCell>
+          <TableCell sx={{ whiteSpace: 'nowrap', cursor: 'pointer' }} onClick={quickEdit.onTrue}>
+            {fDuration(row.birthDate, dayjs(new Date()))}
+          </TableCell>
 
           <TableCell sx={{ whiteSpace: 'nowrap', cursor: 'pointer' }} onClick={quickEdit.onTrue}>
             <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
@@ -124,8 +124,8 @@ export function PatientTableRow({ row, selected, onSelectRow, onDeleteRow, refet
             <br />
             Birth Date: {fDate(row.birthDate)}
             <br />
-              Age: {fDuration(row.birthDate, dayjs(new Date()))}
-              <br/>
+            Age: {fDuration(row.birthDate, dayjs(new Date()))}
+            <br />
             Disabilities: <br />
             <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
               {row.disabilities.map((disability, index) => (

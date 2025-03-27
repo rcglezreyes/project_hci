@@ -44,7 +44,7 @@ class MedicalStaff(Document):
 
 class Patient(Document):
     user = DynamicField(required=False)
-    disabilities = DynamicField(required=False)
+    disabilities = ListField(DynamicField(), default=list, null=True)
     created_time = DateTimeField(default=timezone.now, null=True)
     last_modified_time = DateTimeField(default=timezone.now, null=True)
     birth_date = DateTimeField(null=True)
@@ -69,7 +69,7 @@ class Admission(Document):
     patient = DynamicField(required=False)
     medical_staff = DynamicField(required=False)
     date = DateTimeField(default=timezone.now, null=True)
-    diagnoses = ListField(DynamicField(required=False))
+    diagnoses = ListField(DynamicField(), default=list, null=True)
     diagnoses_notes = StringField(required=False)
     room = DynamicField(required=False)
     bed = IntField(required=False)

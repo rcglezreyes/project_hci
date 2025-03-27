@@ -76,7 +76,6 @@ export function Footer({ layoutQuery, sx }) {
               The starting point for your next project with Minimal UI Kit, built on the newest
               version of Material-UI ©, ready to be customized to your style.
             </Typography>
-
           </Grid>
 
           <Grid {...{ xs: 12, [layoutQuery]: 6 }}>
@@ -155,7 +154,6 @@ export function HomeFooter({ sx }) {
 // ----------------------------------------------------------------------
 
 export const CustomFooter = () => {
-
   const currentYear = new Date().getFullYear();
 
   const { isMobile } = useContext(LoadingContext);
@@ -172,7 +170,7 @@ export const CustomFooter = () => {
         py: 1,
         textAlign: 'center',
         zIndex: 1300,
-        mb: 0
+        mb: 0,
       }}
     >
       <Grid container spacing={2} justifyContent="center">
@@ -183,12 +181,12 @@ export const CustomFooter = () => {
             sx={{ fontSize: '12px', fontWeight: 'bold' }}
           >
             © {currentYear}{' '}
-          { isMobile
-            ? 'MEDICAL ADMISSION SYSTEM. All rights reserved.'
-            : 'MEDICAL ADMISSION SYSTEM. All rights reserved.'}
+            {isMobile
+              ? 'MEDICAL ADMISSION SYSTEM. All rights reserved.'
+              : 'MEDICAL ADMISSION SYSTEM. All rights reserved.'}
           </Typography>
         </Grid>
-        
+
         {/* <Grid item xs={12} sm={6}>
           <Stack
             direction="row"
@@ -209,5 +207,5 @@ export const CustomFooter = () => {
         </Grid> */}
       </Grid>
     </Box>
-  )
+  );
 };

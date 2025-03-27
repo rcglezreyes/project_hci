@@ -17,7 +17,7 @@ export function RHFTextField({ name, helperText, type, ...other }) {
 
   const handleDecrement = () => {
     const currentValue = getValues(name) || 0;
-    if (currentValue > 1) { 
+    if (currentValue > 1) {
       setValue(name, currentValue - 1);
     }
   };
@@ -34,7 +34,7 @@ export function RHFTextField({ name, helperText, type, ...other }) {
           value={type === 'number' && field.value === 0 ? '' : field.value}
           onChange={(event) => {
             if (type === 'number') {
-              const {value} = event.target;
+              const { value } = event.target;
               setValue(name, value === '' ? '' : Number(value));
             } else {
               field.onChange(event.target.value);

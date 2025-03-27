@@ -52,22 +52,22 @@ export function UserNewEditForm({ currentUser }) {
   }, [loadedUsers]);
 
   useEffect(() => {
-      if (loadedUserRoles && loadedUserRoles.length > 0){
-          setListUserRoles(loadedUserRoles);
-      }
-  }, [loadedUserRoles])
+    if (loadedUserRoles && loadedUserRoles.length > 0) {
+      setListUserRoles(loadedUserRoles);
+    }
+  }, [loadedUserRoles]);
 
   useEffect(() => {
-      if (refetchUsers){
-          refetchUsers()
-      }
-  }, [refetchUsers])
+    if (refetchUsers) {
+      refetchUsers();
+    }
+  }, [refetchUsers]);
 
   useEffect(() => {
-      if (refetchUserRoles) {
-          refetchUserRoles()
-      }
-  }, [refetchUserRoles])
+    if (refetchUserRoles) {
+      refetchUserRoles();
+    }
+  }, [refetchUserRoles]);
 
   const NewUserSchema = zod
     .object({
