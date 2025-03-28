@@ -514,7 +514,7 @@ def delete_user(request, id):
             patients.delete()
         
         medical_staffs = MedicalStaff.objects.all()
-        medical_staffs = [medical_staff for medical_staff in medical_staffs if str(medical_staff.user('id', None)) == id]
+        medical_staffs = [medical_staff for medical_staff in medical_staffs if str(medical_staff.user.get('id', None)) == id]
         if medical_staffs:
             medical_staffs.delete()
 
@@ -563,19 +563,14 @@ def delete_users(request):
         if not users:
             return Response({'error': 'Users not found'}, status=404)
         
-        users = [user for user in users if user.username != user_reporter['username']] 
-        if not users:
-            return Response({'error': 'You cannot delete your own account'}, status=400)
-        
         tracking_info = [transform_data_to_mongo(user, exclude_fields=['password']) for user in users]
         
-        patients = Patient.objects.all()
-        patients = [patient for patient in patients if str(patient.user.get('id', None)) in ids]
+        patients = Patient.objects(user__id__in=ids).all()
         if patients:
             patients.delete()
+
         
-        medical_staffs = MedicalStaff.objects.all()
-        medical_staffs = [medical_staff for medical_staff in medical_staffs if str(medical_staff.user('id', None)) in ids]
+        medical_staffs = MedicalStaff.objects(user__id__in=ids).all()
         if medical_staffs:
             medical_staffs.delete()
         

@@ -3,10 +3,6 @@ FROM mongo-express:latest
 COPY wait-for-mongo.sh /usr/local/bin/wait-for-mongo.sh
 RUN chmod +x /usr/local/bin/wait-for-mongo.sh
 
-RUN sed -i "1i app.get('/health', (req, res) => res.send('OK'));" /app/app.js
-
 EXPOSE 8081
-
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s CMD curl -f http://localhost:8081/health || exit 1
 
 ENTRYPOINT ["/usr/local/bin/wait-for-mongo.sh"]

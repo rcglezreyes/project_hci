@@ -53,14 +53,14 @@ export function AdmissionTableRow({ row, selected, onSelectRow, onDeleteRow, ref
 
           <TableCell sx={{ cursor: 'pointer' }}>
             <Stack spacing={2} direction="row" alignItems="center">
-              <Avatar alt={row.patient.user.username} src={row.patient.user.avatarUrl} />
+              <Avatar alt={row.patient?.user?.username} src={row.patient?.user?.avatarUrl} />
 
               <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
                 <Link color="inherit" onClick={quickEdit.onTrue} sx={{ cursor: 'pointer' }}>
-                  {row.patient.user.firstName} {row.patient.user.lastName}
+                  {row.patient?.user?.firstName} {row.patient?.user?.lastName}
                 </Link>
                 <Box component="span" sx={{ color: 'text.disabled' }}>
-                  {row.patient.user.email}
+                  {row.patient?.user?.email}
                 </Box>
               </Stack>
             </Stack>
@@ -68,14 +68,14 @@ export function AdmissionTableRow({ row, selected, onSelectRow, onDeleteRow, ref
 
           <TableCell sx={{ cursor: 'pointer' }}>
             <Stack spacing={2} direction="row" alignItems="center">
-              <Avatar alt={row.medicalStaff.user.username} src={row.medicalStaff.user.avatarUrl} />
+              <Avatar alt={row.medicalStaff?.user?.username} src={row.medicalStaff?.user?.avatarUrl} />
 
               <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
                 <Link color="inherit" onClick={quickEdit.onTrue} sx={{ cursor: 'pointer' }}>
-                  {row.medicalStaff.user.firstName} {row.medicalStaff.user.lastName}
+                  {row.medicalStaff?.user?.firstName} {row.medicalStaff?.user?.lastName}
                 </Link>
                 <Box component="span" sx={{ color: 'text.disabled' }}>
-                  {row.medicalStaff.user.email}
+                  {row.medicalStaff?.user?.email}
                 </Box>
               </Stack>
             </Stack>
@@ -115,27 +115,27 @@ export function AdmissionTableRow({ row, selected, onSelectRow, onDeleteRow, ref
           <TableCell sx={{ cursor: 'pointer' }}>
             Patient:{' '}
             <Stack spacing={2} direction="row" alignItems="center">
-              <Avatar alt={row.patient.user.username} src={row.patient.user.avatarUrl} />
+              <Avatar alt={row.patient?.user?.username} src={row.patient?.user?.avatarUrl} />
 
               <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
                 <Link color="inherit" onClick={quickEdit.onTrue} sx={{ cursor: 'pointer' }}>
-                  {row.patient.user.firstName} {row.patient.user.lastName}
+                  {row.patient?.user?.firstName} {row.patient?.user?.lastName}
                 </Link>
                 <Box component="span" sx={{ color: 'text.disabled' }}>
-                  {row.patient.user.email}
+                  {row.patient?.user?.email}
                 </Box>
               </Stack>
             </Stack>
             Medical Staff:{' '}
             <Stack spacing={2} direction="row" alignItems="center">
-              <Avatar alt={row.medicalStaff.user.username} src={row.medicalStaff.user.avatarUrl} />
+              <Avatar alt={row.medicalStaff?.user?.username} src={row.medicalStaff?.user?.avatarUrl} />
 
               <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
                 <Link color="inherit" onClick={quickEdit.onTrue} sx={{ cursor: 'pointer' }}>
-                  {row.medicalStaff.user.firstName} {row.medicalStaff.user.lastName}
+                  {row.medicalStaff?.user?.firstName} {row.medicalStaff?.user?.lastName}
                 </Link>
                 <Box component="span" sx={{ color: 'text.disabled' }}>
-                  {row.medicalStaff.user.email}
+                  {row.medicalStaff?.user?.email}
                 </Box>
               </Stack>
             </Stack>
@@ -202,7 +202,7 @@ export function AdmissionTableRow({ row, selected, onSelectRow, onDeleteRow, ref
         title="Delete Admission"
         content={
           <ListItemText
-            primary={`Do you want to delete this admission (${row.patient.user.firstName} ${row.patient.user.lastName}) ?`}
+            primary={`Do you want to delete this admission (${row.patient?.user?.firstName} ${row.patient?.user?.lastName}) ?`}
             secondary="Once you delete this admission, you can't recover it."
           />
         }

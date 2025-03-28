@@ -50,20 +50,6 @@ export const UserQuickEditSchema = zod.object({
 export function UserQuickEditForm({ currentUser, open, onClose, refetchUsers }) {
   const { loadedUserRoles } = useDataContext();
 
-  // useEffect(() => {
-  //   if (refetchUsers) {
-  //     refetchUsers();
-  //   }
-  // }, [refetchUsers]);
-
-  // const [updatedUser, setUpdatedUser] = useState(null);
-
-  // useEffect(() => {
-  //   if (currentUser && loadedUsers) {
-  //     setUpdatedUser(loadedUsers.find(user => user.id === currentUser.id));
-  //   }
-  // }, [currentUser, loadedUsers]);
-
   const userLogged = useMemo(() => JSON.parse(sessionStorage.getItem('userLogged')), []);
 
   const GENDER_OPTIONS = [
@@ -112,7 +98,7 @@ export function UserQuickEditForm({ currentUser, open, onClose, refetchUsers }) 
       userReporter: JSON.stringify(userLogged?.data),
     };
 
-    const promise = axios.post(paths.backend.api.users.user.update(id), data);
+    const promise = axios.put(paths.backend.api.users.user.update(id), data);
 
     try {
       reset();

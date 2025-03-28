@@ -1,3 +1,6 @@
+# LOGIN
+aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 351981951783.dkr.ecr.us-east-2.amazonaws.com
+
 # BACKEND
 
 1. Build local:
@@ -18,9 +21,12 @@ docker push 351981951783.dkr.ecr.us-east-2.amazonaws.com/hci/frontend:latest
 
 # MONGO EXPRESS
 
-1. Build local: docker compose -f docker-compose.prod.yml build aws_mongo_express
-2. Tag local: docker tag project_hci-aws_mongo_express:latest 351981951783.dkr.ecr.us-east-2.amazonaws.com/hci/mongo_express:latest
-3. Push AWS: docker push 351981951783.dkr.ecr.us-east-2.amazonaws.com/hci/mongo_express:latest
+1. Build local:
+docker compose -f docker-compose.prod.yml build aws_mongo_express
+2. Tag local:
+docker tag project_hci-aws_mongo_express:latest 351981951783.dkr.ecr.us-east-2.amazonaws.com/hci/mongo_express:latest
+3. Push AWS:
+docker push 351981951783.dkr.ecr.us-east-2.amazonaws.com/hci/mongo_express:latest
 
 # MONGO DB
 
