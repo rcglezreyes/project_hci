@@ -1,0 +1,10 @@
+services:
+  aws_mongoexpress:
+    platform: linux/amd64
+    build:
+      context: ./mongoexpress
+      dockerfile: Dockerfile.aws.mongoexpress.prod
+    container_name: aws_mongoexpress
+    restart: unless-stopped
+    ports:
+      - "8081:8081"

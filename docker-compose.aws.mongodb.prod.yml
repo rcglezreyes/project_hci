@@ -1,0 +1,10 @@
+services:
+  aws_mongodb:
+    platform: linux/amd64
+    build:
+      context: ./mongodb
+      dockerfile: Dockerfile.aws.mongodb.prod
+    container_name: aws_mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"

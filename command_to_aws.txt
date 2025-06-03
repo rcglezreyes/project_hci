@@ -1,0 +1,15 @@
+
+# MongoDB
+docker compose -f docker-compose.aws.mongodb.prod.yml build
+docker tag project_hci-aws_mongodb:latest 351981951783.dkr.ecr.us-east-2.amazonaws.com/robertdevops/mongodb:latest
+docker push 351981951783.dkr.ecr.us-east-2.amazonaws.com/robertdevops/mongodb:latest
+
+# Mongo Express
+docker compose -f docker-compose.aws.mongoexpress.prod.yml build
+docker tag project_hci-aws_mongoexpress:latest 351981951783.dkr.ecr.us-east-2.amazonaws.com/robertdevops/mongoexpress:latest
+docker push 351981951783.dkr.ecr.us-east-2.amazonaws.com/robertdevops/mongoexpress:latest
+
+# Backend
+docker compose -f docker-compose.aws.backend.prod.yml build
+docker tag project_hci-aws_backend:latest 351981951783.dkr.ecr.us-east-2.amazonaws.com/robertdevops/backend:latest
+docker push 351981951783.dkr.ecr.us-east-2.amazonaws.com/robertdevops/backend:latest

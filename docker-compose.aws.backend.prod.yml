@@ -1,0 +1,12 @@
+services:
+  aws_backend:
+    platform: linux/amd64
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.aws.backend.prod
+    container_name: aws_backend
+    restart: unless-stopped
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8001:8001"
