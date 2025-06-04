@@ -13,3 +13,12 @@ docker push 351981951783.dkr.ecr.us-east-2.amazonaws.com/robertdevops/mongoexpre
 docker compose -f docker-compose.aws.backend.prod.yml build
 docker tag project_hci-aws_backend:latest 351981951783.dkr.ecr.us-east-2.amazonaws.com/robertdevops/backend_hci:latest
 docker push 351981951783.dkr.ecr.us-east-2.amazonaws.com/robertdevops/backend_hci:latest
+
+# Frontend
+LOCAL: 
+Si no tiene node_modules : Ejecutar npm install
+Si tiene node_modules : Ejecutar npm run build 
+
+docker compose -f docker-compose.aws.frontend.prod.yml build
+docker tag project_hci-aws_frontend:latest 351981951783.dkr.ecr.us-east-2.amazonaws.com/robertdevops/frontend_hci:latest
+docker push 351981951783.dkr.ecr.us-east-2.amazonaws.com/robertdevops/frontend_hci:latest
