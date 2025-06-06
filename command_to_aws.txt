@@ -1,4 +1,7 @@
 
+# Login
+aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 351981951783.dkr.ecr.us-east-2.amazonaws.com
+
 # MongoDB
 docker compose -f docker-compose.aws.mongodb.prod.yml build
 docker tag project_hci-aws_mongodb:latest 351981951783.dkr.ecr.us-east-2.amazonaws.com/robertdevops/mongodb:latest
