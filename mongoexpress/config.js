@@ -4,10 +4,6 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 let mongo = {
-  // Setting the connection string will only give access to that database
-  // to see more databases you need to set mongodb.admin to true or add databases to the mongodb.auth list
-  // It is RECOMMENDED to use connectionString instead of individual params, other options will be removed later.
-  // More info here: https://docs.mongodb.com/manual/reference/connection-string/
   connectionString: process.env.ME_CONFIG_MONGODB_SERVER ? '' : process.env.ME_CONFIG_MONGODB_URL,
   host: '127.0.0.1',
   port: '27017',
@@ -16,7 +12,6 @@ let mongo = {
   password: '',
 };
 
-// Accessing Bluemix variable to get MongoDB info
 if (process.env.VCAP_SERVICES) {
   const dbLabel = 'mongodb-2.4';
   const env = JSON.parse(process.env.VCAP_SERVICES);
@@ -68,43 +63,43 @@ function getConnectionStringFromInlineParams() {
       meConfigMongodbServer.length > 1 ? meConfigMongodbServer : meConfigMongodbServer[0]
     ) ||  mongo.host || process.env.ME_CONFIG_MONGODB_SERVER || '127.0.0.1',
     port: mongo.port || process.env.ME_CONFIG_MONGODB_PORT || '27017',
-    dbName: mongo.dbName,
+    dbName: mongo.dbName || 'admin',
     username: mongo.username,
     password: mongo.password,
   };
-  const login = infos.username ? `${infos.username}:${infos.password}@` : '';
-  return `mongodb://${login}${infos.server}:${infos.port}/${infos.dbName}`;
+  
+  const login = infos.username
+  ? `${encodeURIComponent(infos.username)}:${encodeURIComponent(infos.password)}@`
+  : '';
+  return `mongodb://${login}${infos.server}:${infos.port}/?authSource=admin&authMechanism=SCRAM-SHA-1`;
 }
 
 function getConnectionStringFromEnvVariables() {
   const infos = {
-    // server: mongodb hostname or IP address
-    // for replica set, use array of string instead
     server: (
       meConfigMongodbServer.length > 1 ? meConfigMongodbServer : meConfigMongodbServer[0]
     ) || mongo.host,
     port: process.env.ME_CONFIG_MONGODB_PORT || mongo.port,
     dbName: process.env.ME_CONFIG_MONGODB_AUTH_DATABASE || mongo.dbName,
-
-    // >>>> If you are using an admin mongodb account, or no admin account exists, fill out section below
-    // >>>> Using an admin account allows you to view and edit all databases, and view stats
-    // leave username and password empty if no admin account exists
     username: getFileEnv(adminUsername) || getFileEnv(dbAuthUsername) || mongo.username,
     password: getFileEnv(adminPassword) || getFileEnv(dbAuthPassword) || mongo.password,
   };
-  const login = infos.username ? `${infos.username}:${infos.password}@` : '';
-  return `mongodb://${login}${infos.server}:${infos.port}/${infos.dbName}`;
+  const login = infos.username
+  ? `${encodeURIComponent(infos.username)}:${encodeURIComponent(infos.password)}@`
+  : '';
+  return `mongodb://${login}${infos.server}:${infos.port}/?authSource=admin&authMechanism=SCRAM-SHA-1`;
 }
 
 function getBoolean(str, defaultValue = false) {
   return str ? str.toLowerCase() === 'true' : defaultValue;
 }
 
+// console.log("🚨 DEBUG CONNECTION STRING 🚨", mongo.connectionString || getConnectionStringFromEnvVariables());
+
 export default {
   mongodb: {
     mongo,
     getConnectionStringFromInlineParams,
-    // if a connection string options such as server/port/etc are ignored
     connectionString: mongo.connectionString || getConnectionStringFromEnvVariables(),
 
     /** @type {import('mongodb').MongoClientOptions} */
@@ -137,7 +132,7 @@ export default {
   site: {
     // baseUrl: the URL that mongo express will be located at - Remember to add the forward slash at the start and end!
     baseUrl: process.env.ME_CONFIG_SITE_BASEURL || '/',
-    cookieKeyName: 'mongo-express',
+    cookieKeyName: 'mongoexpress',
     cookieSecret: process.env.ME_CONFIG_SITE_COOKIESECRET || 'secret',
     host: process.env.VCAP_APP_HOST || 'localhost',
     port: process.env.PORT || 8081,

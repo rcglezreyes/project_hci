@@ -228,7 +228,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-FRONTEND_URL = env('FRONTEND_URL', default='')
+FRONTEND_URL = env('BACKEND_URL', default='')
 
 
 # Celery
