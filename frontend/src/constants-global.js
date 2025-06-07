@@ -10,4 +10,5 @@ export const CONSTANTS = {
   frontendHost: import.meta.env.VITE_FRONTEND_HOST ?? '',
   frontendUrl: import.meta.env.VITE_FRONTEND_URL ?? '',
   frontendPort: import.meta.env.VITE_FRONTEND_PORT ?? 3000,
+  websocketProtocol: import.meta.env.VITE_WEBSOCKET_PROTOCOL ?? 'ws',
 };

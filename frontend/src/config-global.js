@@ -19,6 +19,7 @@ export const CONFIG = {
   frontendHost: CONSTANTS.frontendHost,
   frontendUrl: CONSTANTS.frontendUrl,
   frontendPort: CONSTANTS.frontendPort,
+  websocketProtocol: CONSTANTS.websocketProtocol,
   roles: {
     superadmin: import.meta.env.VITE_ROLE_SUPERADMIN ?? '',
     administrator: import.meta.env.VITE_ROLE_ADMINISTRATOR ?? '',

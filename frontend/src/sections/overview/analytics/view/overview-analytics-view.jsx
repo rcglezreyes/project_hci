@@ -67,7 +67,7 @@ export function OverviewAnalyticsView() {
   }, [loadedPatients]);
 
   useEffect(() => {
-    const socket = new WebSocket(`wss://${CONFIG.apiHost}/api/main/ws/admissions/`);
+    const socket = new WebSocket(`${CONFIG.websocketProtocol}://${CONFIG.apiHost}/api/main/ws/admissions/`);
     socket.onerror = (errorEvent) => {
       console.dir(errorEvent);
       console.error('WebSocket error (toString):', errorEvent.toString());
