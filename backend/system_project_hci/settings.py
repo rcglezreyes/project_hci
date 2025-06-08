@@ -32,6 +32,49 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 REDIS_HOST = env('REDIS_HOST', default='localhost')
 
+LOGGING_LEVEL = env('LOGGING_LEVEL', default='WARNING')
+
+LOGGING_FILE = env('LOGGING_FILE', default='backend_app.log')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': LOGGING_LEVEL,
+            'class': 'logging.FileHandler',
+            'filename': LOGGING_FILE,
+            'formatter': 'verbose',
+        },
+        'console': {                            
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(levelname)s %(message)s'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': LOGGING_LEVEL,
+            'propagate': True,
+        },
+        'celery': {
+            'handlers': ['file'],
+            'level': LOGGING_LEVEL,
+            'propagate': True,
+        },
+        'django.channels': {
+            "handlers": ['console'],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
+}
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -40,7 +83,7 @@ REDIS_HOST = env('REDIS_HOST', default='localhost')
 SECRET_KEY = 'django-insecure--i$a=heuuy55t_!15ketws1@ks01x4zc3b@0paekw7&g$7r8k7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False 
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
 
@@ -155,7 +198,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [(REDIS_HOST, 6379, 1)], 
+            "hosts": [f'redis://{REDIS_HOST}:6379/0'],
         },
         'CAPACITY': 1500,
     },

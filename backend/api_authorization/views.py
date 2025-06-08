@@ -24,44 +24,59 @@ def health_check(request):
 
 @csrf_exempt
 def login(request):
+    
+    logger.warning("LOGIN START")   
+    
     if request.method == 'POST':
         try:
             data = json.loads(request.body)  
+            logger.warning("PARSE BODY OK")   
+            
             username = data.get('username')  
             password = data.get('password') 
             if not username or not password:
                 return JsonResponse({'error': 'Username and password required', 'description': 'Username and password required'}, status=400)
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                user = user.to_mongo().to_dict()
-                del user['password']
-                if '_id' in user and isinstance(user['_id'], ObjectId):
-                    user['_id'] = str(user['_id'])
-                request.session['user_id'] = user['_id']
-                request.session[BACKEND_SESSION_KEY] = 'api_authorization.backends.MongoDBBackend'
-                request.session.set_expiry(0)
-                request.session.modified = True
-                logger.info(f'User {username} logged in')
-                tracking = Tracking(
-                    user_reporter=user,
-                    action='login',
-                    created_time=timezone.now(),
-                    managed_data={
-                        'data': user,
-                    }
-                )
-                tracking.save()
-                current_user = LoginUser.objects(username=username).first()
-                current_user.last_login = timezone.now()
-                current_user.save()
-                return JsonResponse({'data': user}, status=200)
-            login_user = LoginUser.objects(username=username).first()
-            if login_user:
-                return JsonResponse({'error': 'Invalid credentials', 'description' : 'Incorrect Password'}, status=400)
-            else:
-                return JsonResponse({'error': 'Invalid credentials', 'description' : 'Username does not exist'}, status=400)
-        except json.JSONDecodeError:
+            try:
+                user = authenticate(request, username=username, password=password)
+                logger.warning("AFTER AUTHENTICATE")
+                
+                if user is not None:
+                    user = user.to_mongo().to_dict()
+                    del user['password']
+                    if '_id' in user and isinstance(user['_id'], ObjectId):
+                        user['_id'] = str(user['_id'])
+                    request.session['user_id'] = user['_id']
+                    request.session[BACKEND_SESSION_KEY] = 'api_authorization.backends.MongoDBBackend'
+                    request.session.set_expiry(0)
+                    request.session.modified = True
+                    logger.info(f'User {username} logged in')
+                    tracking = Tracking(
+                        user_reporter=user,
+                        action='login',
+                        created_time=timezone.now(),
+                        managed_data={
+                            'data': user,
+                        }
+                    )
+                    logger.warning("BEFORE TRACKING.SAVE")
+                    tracking.save()
+                    logger.warning("AFTER TRACKING.SAVE") 
+                    current_user = LoginUser.objects(username=username).first()
+                    current_user.last_login = timezone.now()
+                    logger.warning("BEFORE USER.SAVE")
+                    # current_user.save()
+                    # logger.warning("AFTER USER.SAVE")
+                    return JsonResponse({'data': user}, status=200)
+                login_user = LoginUser.objects(username=username).first()
+                if login_user:
+                    return JsonResponse({'error': 'Invalid credentials', 'description' : 'Incorrect Password'}, status=400)
+                else:
+                    return JsonResponse({'error': 'Invalid credentials', 'description' : 'Username does not exist'}, status=400)
+            except Exception as e:
+                logger.error(f'Error during authentication: {e}')
+                return JsonResponse({'error': 'Authentication error', 'description': str(e)}, status=500)
             
+        except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON', 'description': 'Request is not in a valid format'}, status=400)
     return JsonResponse({'error': 'Method not allowed', 'description': 'Method not allowed'}, status=405)
 

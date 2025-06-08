@@ -80,6 +80,7 @@ def user_saved(sender, document, **kwargs):
             }
         }
     }
+    
     async_to_sync(channel_layer.group_send)('user', serialize_datetime(event))
     
     
