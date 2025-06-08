@@ -19,7 +19,7 @@ RUN apt-get update
 
 COPY . /app/
 
-EXPOSE 8000
+EXPOSE 8001
 
 CMD ["sh", "-c", "python manage.py makemigrations --no-input && \
                   python manage.py migrate --no-input && \
@@ -27,4 +27,4 @@ CMD ["sh", "-c", "python manage.py makemigrations --no-input && \
                   python init_scripts.py && \
                   celery -A system_project_hci worker --loglevel=info -E & \
                   celery -A system_project_hci beat --loglevel=info & \
-                  gunicorn system_project_hci.asgi:application -w 3 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000"]
+                  gunicorn system_project_hci.asgi:application -w 3 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8001"]

@@ -24,11 +24,14 @@ export function AuthProvider({ children }) {
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken, refreshToken);
 
+        console.log('Valid access token found, checking user session...');
+
         const res = await axios.get(endpoints.auth.me);
 
         const { user } = res.data;
 
         setState({ user: { ...user, accessToken }, loading: false });
+        
       } else {
         setState({ user: null, loading: false });
       }

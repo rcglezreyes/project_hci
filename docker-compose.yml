@@ -1,16 +1,17 @@
 services:
   mongo_db:
     build:
-      context: ./mongo_db
+      context: ./mongodb
+      dockerfile: Dockerfile
     container_name: mongo_db
     restart: unless-stopped
     ports:
       - "27037:27017"
     env_file:
-      - ./mongo_db/.env
+      - ./mongodb/.env
     volumes:
       - mongodb_data:/data/db
-      - ./mongo_db/init:/docker-entrypoint-initdb.d
+      - ./mongodb/init:/docker-entrypoint-initdb.d
     networks:
       - net_hci
     deploy:
@@ -24,13 +25,14 @@ services:
 
   mongo_express:
     build:
-      context: ./mongo_express
+      context: ./mongoexpress
+      dockerfile: Dockerfile
     container_name: mongo_express
     restart: unless-stopped
     ports:
-      - "8085:8085"
+      - "8081:8081"
     env_file:
-      - ./mongo_express/.env
+      - ./mongoexpress/.env
     depends_on:
       - mongo_db
     networks:
@@ -55,7 +57,7 @@ services:
       - ./backend/gunicorn.conf.py:/etc/nginx/gunicorn.conf.py
       - ./backend/static:/app/staticfiles
     ports:
-      - "8001:8000"
+      - "8001:8001"
     depends_on:
       - mongo_db
       - redis
